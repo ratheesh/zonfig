@@ -6,3 +6,5 @@ My zsh configuration based on the zimfw
 $ cd zonfig
 $ stow -R -v -t $HOME zsh
 ```
+# LICENSE
+This is published and distributed through MIT license.
