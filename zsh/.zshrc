@@ -290,6 +290,12 @@ bindkey -M menuselect 'l' vi-forward-char
 # Meta-u to chdir to the parent directory
 bindkey -s '\eu' '^Ucd ..; ls^M'
 
+# zsh-vi-mode
+ZVM_LAZY_KEYBINDINGS=false
+function zvm_config() {
+  ZVM_LINE_INIT_MODE=$ZVM_MODE_INSERT
+}
+
 # Don't use fzf completions
 if (( $+commands[fzf] )); then
     fzf_default_completion='expand-or-complete-with-indicator'
@@ -380,8 +386,11 @@ fi
 if (( $+commands[fzf] )); then
     fzf_default_completion='expand-or-complete-with-indicator'
 fi
-# Initialize fzf - https://github.com/junegunn/fzf
-[ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh
+
+# TODO: move this another file
+# source $HOME/.custom/completions.zsh
+# source $HOME/.custom/utils.zsh
+# source $HOME/.custom/ratheesh.zsh-theme
 
 # }}} End configuration added by Zim install
 

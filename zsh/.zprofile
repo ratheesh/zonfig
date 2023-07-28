@@ -54,9 +54,9 @@ stty ixoff -ixon
 #
 
 # if [[ -z "$LANG" ]]; then
-export GDM_LANG='en_US.UTF-8'
-export LANG='en_US.UTF-8'
-export LANGUAGE='en_US.UTF-8'
+# export GDM_LANG='en_US.UTF-8'
+# export LANG='en_US.UTF-8'
+# export LANGUAGE='en_US.UTF-8'
 # fi
 
 #
@@ -114,16 +114,16 @@ TMPPREFIX="${TMPDIR%/}/zsh"
 # common environment variable exports
 
 # generic env setting
-export TERMINFO=/lib/terminfo	# required for gdb-tui
-export TZ='Asia/Kolkata'; export TZ
-export LC_ALL='en_US.UTF-8'
+# export TERMINFO=/lib/terminfo	# required for gdb-tui
+# export TZ='Asia/Kolkata'; export TZ
+# export LC_ALL='en_US.UTF-8'
 
-if [[ $(echotc Co) -ge 256 ]]; then
-    # 256 color terminals
-    export GREP_COLORS="mt=03;04;38;5;2;48;5;234:sl=:cx=:fn=38;5;65:ln=38;5;30:bn=37:se=38;5;198"
-else
-    export GREP_COLORS='ms=03;04;91:mc=01;33;100:sl=:cx=:fn=94:ln=32:bn=33:se=35'
-fi
+# if [[ $(echotc Co) -ge 256 ]]; then
+#     # 256 color terminals
+#     export GREP_COLORS="mt=03;04;38;5;2;48;5;234:sl=:cx=:fn=38;5;65:ln=38;5;30:bn=37:se=38;5;198"
+# else
+#     export GREP_COLORS='ms=03;04;91:mc=01;33;100:sl=:cx=:fn=94:ln=32:bn=33:se=35'
+# fi
 
 # autojump configuration
 export AUTOJUMP_IGNORE_CASE=1 # ignore case in autojump completion
@@ -143,7 +143,7 @@ else
 fi
 
 # configure fzf plugin
-FZF_DEFAULT_OPTS="--no-mouse --height 60% -1 --border --margin=0,1,1,1 --reverse --multi --inline-info --header='-> FZF <-' --prompt='➜  ' --pointer='➦ ' --marker='●'"
+FZF_DEFAULT_OPTS="--no-mouse --height 50% -1 --border --margin=0,1,1,1 --reverse --multi --inline-info --header='-> FZF <-' --prompt='➜  ' --pointer='➦ ' --marker='●'"
 if (( $+commands[fd] ));then
     export FZF_DEFAULT_COMMAND='fd --type file --follow --hidden --color=never --exclude .git'
 
@@ -233,4 +233,4 @@ if (( $+commands[virtualenvwrapper_lazy.sh] )); then
 fi
 
 # vim: set ft=zsh ff=unix ts=4 sw=4 tw=0 expandtab:
-# End of File
+

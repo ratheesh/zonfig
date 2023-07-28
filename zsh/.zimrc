@@ -8,6 +8,8 @@
 # Modules
 #
 
+# zsh vi mode
+zmodule jeffreytse/zsh-vi-mode
 # Sets sane Zsh built-in environment options.
 zmodule environment
 # Provides handy git aliases and functions.
@@ -22,13 +24,12 @@ zmodule utility
 #
 # Prompt
 #
-
-# Exposes to prompts how long the last command took to execute, used by asciiship.
-# zmodule duration-info
 # Exposes git repository status information to prompts, used by asciiship.
 zmodule git-info
 # A heavily reduced, ASCII-only version of the Spaceship and Starship prompts.
-zmodule asciiship
+# zmodule asciiship
+# zmodule sorin
+zmodule ratheesh/zimfw-prompt
 
 #
 # Completion
@@ -51,7 +52,8 @@ zmodule zdharma-continuum/fast-syntax-highlighting
 zmodule zsh-users/zsh-autosuggestions
 
 # custom init scripts
-zmodule $HOME/.custom/completions.zsh
+# source $HOME/.custom/completions.zsh
+# source $HOME.custom/utils.zsh
 
 # }}} End configuration added by Zim install
 
