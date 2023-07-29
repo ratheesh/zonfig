@@ -21,6 +21,9 @@ zmodule termtitle
 # Utility aliases and functions. Adds colour to ls, grep and less.
 zmodule utility
 
+# recently visited folders
+zmodule agkozak/zsh-z
+
 #
 # Prompt
 #
