@@ -9,20 +9,22 @@
 #
 
 # zsh vi mode
-zmodule jeffreytse/zsh-vi-mode
+# zmodule jeffreytse/zsh-vi-mode
+# zmodule sineto/vi-mode
 # Sets sane Zsh built-in environment options.
 zmodule environment
 # Provides handy git aliases and functions.
 zmodule git
-# Applies correct bindkeys for input events.
-zmodule input
 # Sets a custom terminal title.
-zmodule termtitle
+# zmodule termtitle
 # Utility aliases and functions. Adds colour to ls, grep and less.
 zmodule utility
 
 # recently visited folders
 zmodule agkozak/zsh-z
+
+# Applies correct bindkeys for input events.
+zmodule input
 
 #
 # Prompt
@@ -31,12 +33,7 @@ zmodule agkozak/zsh-z
 zmodule git-info
 # A heavily reduced, ASCII-only version of the Spaceship and Starship prompts.
 # zmodule asciiship
-# zmodule sorin
 zmodule ratheesh/zimfw-prompt
-
-#
-# Completion
-#
 
 # Additional completion definitions for Zsh.
 zmodule zsh-users/zsh-completions --fpath src
@@ -49,10 +46,12 @@ zmodule completion
 #
 # syntax-highlighting must be sourced after completion
 # zmodule zsh-users/zsh-syntax-highlighting
-zmodule zsh-users/zsh-history-substring-search # must be sourced after syntex highlighting
 zmodule zdharma-continuum/fast-syntax-highlighting
-# zmodule marlonrichert/zsh-autocomplete
+zmodule zsh-users/zsh-history-substring-search
 zmodule zsh-users/zsh-autosuggestions
+zmodule nyquase/vi-mode
+zmodule b4b4r07/zsh-vimode-visual
+# zmodule marlonrichert/zsh-autocomplete
 
 # custom init scripts
 # source $HOME/.custom/completions.zsh
