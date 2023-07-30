@@ -3,13 +3,29 @@
 # User configuration sourced by interactive shells
 #
 #
-# Define zim location
+# ------------------
+# Initialize modules
+# ------------------
 
-export ZIM_HOME=${ZDOTDIR:-${HOME}}/.zim
-fpath=(
-	$HOME/.custom
-	$fpath
-	)
+# Define zim location
+ZIM_HOME=${ZDOTDIR:-${HOME}}/.zim
+# Download zimfw plugin manager if missing.
+if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
+  if (( ${+commands[curl]} )); then
+    curl -fsSL --create-dirs -o ${ZIM_HOME}/zimfw.zsh \
+        https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
+  else
+    mkdir -p ${ZIM_HOME} && wget -nv -O ${ZIM_HOME}/zimfw.zsh \
+        https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
+  fi
+fi
+# Install missing modules, and update ${ZIM_HOME}/init.zsh if missing or outdated.
+if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZDOTDIR:-${HOME}}/.zimrc ]]; then
+  source ${ZIM_HOME}/zimfw.zsh init -q
+fi
+# Initialize modules.
+source ${ZIM_HOME}/init.zsh
+
 # -----------------
 # Zsh configuration
 # -----------------
@@ -94,22 +110,6 @@ export KEYTIMEOUT=1
 # If this is removed, cursor after prompt behave weirdly
 [[ $TMUX = "" ]] && export TERM="wezterm"
 
-# history substring search module
-HISTORY_SUBSTRING_SEARCH_FUZZY=true
-HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=true
-HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='bg=233,fg=220,italic'
-HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='bg=234,fg=196,underline'
-for keymap in 'emacs' 'viins' 'vicmd'; do
-    bindkey -M ${keymap} "^p" history-substring-search-up
-    bindkey -M ${keymap} "^n" history-substring-search-down
-    # bindkey -M ${keymap} "^r" history-incremental-search-backward
-done
-
-# Bind j/k in normal mode
-if [[ ${keymap} = 'vicmd' ]];then
-    bindkey -M ${keymap} "j" history-substring-search-down
-    bindkey -M ${keymap} "k" history-substring-search-up
-fi # if
 
 #
 # History
@@ -122,24 +122,11 @@ setopt HIST_IGNORE_ALL_DUPS
 # Input/output
 #
 
-# Set editor default keymap to emacs (`-e`) or vi (`-v`)
-bindkey -e
-
-# Prompt for spelling correction of commands.
-#setopt CORRECT
-
 # Customize spelling correction prompt.
-#SPROMPT='zsh: correct %F{red}%R%f to %F{green}%r%f [nyae]? '
+SPROMPT='zsh: correct %F{red}%R%f to %F{green}%r%f [nyae]? '
 
 # Remove path separator from WORDCHARS.
 WORDCHARS=${WORDCHARS//[\/]}
-
-# -----------------
-# Zim configuration
-# -----------------
-
-# Use degit instead of git as the default tool to install and update modules.
-#zstyle ':zim:zmodule' use 'degit'
 
 # --------------------
 # Module configuration
@@ -157,7 +144,7 @@ WORDCHARS=${WORDCHARS//[\/]}
 #
 
 # Append `../` to your input for each `.` you type after an initial `..`
-#zstyle ':zim:input' double-dot-expand yes
+zstyle ':zim:input' double-dot-expand yes
 
 #
 # termtitle
@@ -167,6 +154,25 @@ WORDCHARS=${WORDCHARS//[\/]}
 # See http://zsh.sourceforge.net/Doc/Release/Prompt-Expansion.html#Simple-Prompt-Escapes
 # If none is provided, the default '%n@%m: %~' is used.
 #zstyle ':zim:termtitle' format '%1~'
+#
+# zsh-history-substring-search
+#
+# history substring search module
+HISTORY_SUBSTRING_SEARCH_FUZZY=true
+HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=true
+HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='bg=233,fg=220,italic'
+HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='bg=234,fg=196,underline'
+for keymap in 'emacs' 'viins' 'vicmd'; do
+    bindkey -M ${keymap} "^p" history-substring-search-up
+    bindkey -M ${keymap} "^n" history-substring-search-down
+done
+
+# Bind j/k in normal mode
+if [[ ${keymap} = 'vicmd' ]];then
+    bindkey -M ${keymap} "j" history-substring-search-down
+    bindkey -M ${keymap} "k" history-substring-search-up
+fi # if
+
 
 #
 # zsh-autosuggestions
@@ -186,34 +192,13 @@ ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 
 # Set what highlighters will be used.
 # See https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters.md
-# ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
 
 # Customize the main highlighter styles.
 # See https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters/main.md#how-to-tweak-it
-#typeset -A ZSH_HIGHLIGHT_STYLES
-#ZSH_HIGHLIGHT_STYLES[comment]='fg=242'
+typeset -A ZSH_HIGHLIGHT_STYLES
+ZSH_HIGHLIGHT_STYLES[comment]='fg=242'
 
-# ------------------
-# Initialize modules
-# ------------------
-
-ZIM_HOME=${ZDOTDIR:-${HOME}}/.zim
-# Download zimfw plugin manager if missing.
-if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
-  if (( ${+commands[curl]} )); then
-    curl -fsSL --create-dirs -o ${ZIM_HOME}/zimfw.zsh \
-        https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
-  else
-    mkdir -p ${ZIM_HOME} && wget -nv -O ${ZIM_HOME}/zimfw.zsh \
-        https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
-  fi
-fi
-# Install missing modules, and update ${ZIM_HOME}/init.zsh if missing or outdated.
-if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZDOTDIR:-${HOME}}/.zimrc ]]; then
-  source ${ZIM_HOME}/zimfw.zsh init -q
-fi
-# Initialize modules.
-source ${ZIM_HOME}/init.zsh
 
 # ------------------------------
 # Post-init module configuration
@@ -224,34 +209,16 @@ zstyle ':completion:*' special-dirs false
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS} "ma=48;5;244;1"
 
 expand-or-complete-with-dots() {
-	# sleep 0.2
     print -Pn "%{%B%F{red}......%f%b%}"
     zle expand-or-complete
     zle redisplay
 }
 zle -N expand-or-complete-with-dots
-bindkey '^I' expand-or-complete-with-dots
-
-#
-# zsh-history-substring-search
-#
-
-zmodload -F zsh/terminfo +p:terminfo
-# Bind ^[[A/^[[B manually so up/down works both before and after zle-line-init
-for key ('^[[A' '^P' ${terminfo[kcuu1]}) bindkey ${key} history-substring-search-up
-for key ('^[[B' '^N' ${terminfo[kcud1]}) bindkey ${key} history-substring-search-down
-for key ('k') bindkey -M vicmd ${key} history-substring-search-up
-for key ('j') bindkey -M vicmd ${key} history-substring-search-down
-unset key
+for keymap in  'emacs' 'viins' 'vicmd'; do
+	bindkey -M ${keymap} '^I' expand-or-complete-with-dots
+done
 
 # zsh auto-suggestions module
-# my-autosuggest-accept() {
-#     zle autosuggest-accept
-#     zle redisplay
-#     zle redisplay
-# }
-# zle -N my-autosuggest-accept
-# ZSH_AUTOSUGGEST_IGNORE_WIDGETS+=my-autosuggest-accept
 for keymap in 'emacs' 'viins' 'vicmd'; do
 #     bindkey -M ${keymap} '^ ' my-autosuggest-accept
     bindkey -M ${keymap} '^ ' autosuggest-accept
@@ -264,8 +231,6 @@ done
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#606060,italic"
 
 # bindkey "^M" accept-line
-# ZSH_AUTOSUGGEST_STRATEGY='match_prev_cmd'
-# ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS+=(emacs-forward-word)
 ZSH_AUTOSUGGEST_USE_ASYNC=true
 ZSH_AUTOSUGGEST_STRATEGY=(history completion match_prev_cmd)
 for keymap in 'emacs' 'viins' 'vicmd'; do
@@ -284,32 +249,25 @@ bindkey -M menuselect 'j' vi-down-line-or-history
 bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
 
-# Esc to exit menuselect
-# bindkey -M menuselect end-break
+bindkey -M menuselect '^I' menu-select
+bindkey -M menuselect '^[[Z' reverse-menu-complete
 
 # Meta-u to chdir to the parent directory
 bindkey -s '\eu' '^Ucd ..; ls^M'
-
-# zsh-vi-mode
-ZVM_LAZY_KEYBINDINGS=false
-function zvm_config() {
-  ZVM_LINE_INIT_MODE=$ZVM_MODE_INSERT
-}
-
-# Don't use fzf completions
-if (( $+commands[fzf] )); then
-    fzf_default_completion='expand-or-complete-with-indicator'
-fi
 
 # disable highlighting on paste
 zle_highlight+=(paste:none)
 
 # global alias expansion keys
 # bindkey '^ ' magic-space          # control-space to bypass completion
-# bindkey -M isearch " " magic-space # normal space during searches
 
 # Initialize fzf - https://github.com/junegunn/fzf
 [ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh
+
+# Don't use fzf completions
+if (( $+commands[fzf] )); then
+    fzf_default_completion='expand-or-complete-with-indicator'
+fi
 
 # Customize to your needs...
 # add custom users for auto completion
@@ -380,11 +338,6 @@ if [[ $TERM == dumb ]]; then
 else
     autoload -Uz bracketed-paste-magic
     zle -N bracketed-paste bracketed-paste-magic
-fi
-
-# Don't use fzf completions
-if (( $+commands[fzf] )); then
-    fzf_default_completion='expand-or-complete-with-indicator'
 fi
 
 # TODO: move this another file
