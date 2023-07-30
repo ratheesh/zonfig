@@ -43,8 +43,8 @@ fi
 
 # misc
 export GCC_COLOR="auto"
-export TERM="xterm-256color"
-export COLORTERM="xterm-256color"
+export TERM="wezterm"
+export COLORTERM="wezterm"
 
 # disable soft flow control
 stty ixany

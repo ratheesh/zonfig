@@ -92,7 +92,7 @@ export KEYMAPTIMEOUT=1
 export KEYTIMEOUT=1
 
 # If this is removed, cursor after prompt behave weirdly
-[[ $TMUX = "" ]] && export TERM="xterm-256color"
+[[ $TMUX = "" ]] && export TERM="wezterm"
 
 # history substring search module
 HISTORY_SUBSTRING_SEARCH_FUZZY=true
