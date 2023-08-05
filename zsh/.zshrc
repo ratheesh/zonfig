@@ -208,16 +208,6 @@ ZSH_HIGHLIGHT_STYLES[comment]='fg=242'
 zstyle ':completion:*' special-dirs false
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS} "ma=48;5;244;1"
 
-expand-or-complete-with-dots() {
-    print -Pn "%{%B%F{red}......%f%b%}"
-    zle expand-or-complete
-    zle redisplay
-}
-zle -N expand-or-complete-with-dots
-for keymap in  'emacs' 'viins' 'vicmd'; do
-	bindkey -M ${keymap} '^I' expand-or-complete-with-dots
-done
-
 # zsh auto-suggestions module
 for keymap in 'emacs' 'viins' 'vicmd'; do
 #     bindkey -M ${keymap} '^ ' my-autosuggest-accept
@@ -300,6 +290,7 @@ path=(
     /opt/SEGGER/JLink
     $HOME/gems/bin
     $HOME/go/bin
+	$HOME/.local/bin/
     $path[@]
 )
 
