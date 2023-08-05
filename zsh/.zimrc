@@ -53,6 +53,8 @@ zmodule zsh-users/zsh-autosuggestions
 zmodule b4b4r07/zsh-vimode-visual
 zmodule nyquase/vi-mode
 # zmodule marlonrichert/zsh-autocomplete
+zmodule rathesh/zimfw-customization --root input
+zmodule rathesh/zimfw-customization --root completion
 
 # custom init scripts
 # source $HOME/.custom/completions.zsh
