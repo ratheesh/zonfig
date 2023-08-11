@@ -47,10 +47,10 @@ zmodule completion
 #
 # syntax-highlighting must be sourced after completion
 # zmodule zsh-users/zsh-syntax-highlighting
-zmodule zdharma-continuum/fast-syntax-highlighting
 zmodule zsh-users/zsh-history-substring-search
 zmodule zsh-users/zsh-autosuggestions
 zmodule b4b4r07/zsh-vimode-visual
+zmodule zdharma-continuum/fast-syntax-highlighting
 zmodule nyquase/vi-mode
 # zmodule marlonrichert/zsh-autocomplete
 zmodule rathesh/zimfw-customization --root input
