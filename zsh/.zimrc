@@ -53,8 +53,8 @@ zmodule zdharma-continuum/fast-syntax-highlighting
 zmodule b4b4r07/zsh-vimode-visual
 zmodule ratheesh/vi-mode
 # zmodule marlonrichert/zsh-autocomplete
-zmodule rathesh/zimfw-customization --root input
-zmodule rathesh/zimfw-customization --root completion
+zmodule ratheesh/zimfw-customization --root input
+zmodule ratheesh/zimfw-customization --root completion
 
 # custom init scripts
 # source $HOME/.custom/completions.zsh
