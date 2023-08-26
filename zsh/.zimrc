@@ -20,11 +20,17 @@ zmodule git
 # Utility aliases and functions. Adds colour to ls, grep and less.
 zmodule utility
 
+# handle archives
+zmodule archive
+
 # recently visited folders
 zmodule agkozak/zsh-z
 
 # Applies correct bindkeys for input events.
 zmodule input
+
+# Handle ssh keys
+zmodule ssh
 
 #
 # Prompt

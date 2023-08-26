@@ -146,6 +146,9 @@ WORDCHARS=${WORDCHARS//[\/]}
 # Append `../` to your input for each `.` you type after an initial `..`
 zstyle ':zim:input' double-dot-expand yes
 
+# SSH key management
+zstyle ':zim:ssh' ids 'id_rsa1' 'id_rsa2' 'id_rsa3'
+
 #
 # termtitle
 #
