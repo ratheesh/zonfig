@@ -248,6 +248,9 @@ bindkey -M menuselect '^[[Z' reverse-menu-complete
 # Meta-u to chdir to the parent directory
 bindkey -s '\eu' '^Ucd ..; ls^M'
 
+# Unbind Ctrl-g for fzf-git to get working
+bindkey -r "^g"
+
 # disable highlighting on paste
 zle_highlight+=(paste:none)
 
