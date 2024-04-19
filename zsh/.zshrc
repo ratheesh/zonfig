@@ -293,7 +293,8 @@ path=(
     /opt/SEGGER/JLink
     $HOME/gems/bin
     $HOME/go/bin
-	$HOME/.local/bin/
+    $HOME/.local/share/nvim/mason/bin
+    $HOME/.local/bin/
     $path[@]
 )
 
