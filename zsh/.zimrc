@@ -32,6 +32,9 @@ zmodule input
 # Handle ssh keys
 zmodule ssh
 
+# fzf
+zmodule fzf
+
 #
 # Prompt
 #
@@ -62,8 +65,7 @@ zmodule zdharma-continuum/fast-syntax-highlighting
 zmodule b4b4r07/zsh-vimode-visual
 zmodule ratheesh/vi-mode
 # zmodule marlonrichert/zsh-autocomplete
-zmodule ratheesh/zimfw-customization --root input
-zmodule ratheesh/zimfw-customization --root completion
+zmodule junegunn/fzf-git.sh --source fzf-git.sh
 
 # custom init scripts
 # source $HOME/.custom/completions.zsh
