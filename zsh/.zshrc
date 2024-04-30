@@ -338,10 +338,5 @@ else
     zle -N bracketed-paste bracketed-paste-magic
 fi
 
-# TODO: move this another file
-# source $HOME/.custom/completions.zsh
-# source $HOME/.custom/utils.zsh
-# source $HOME/.custom/ratheesh.zsh-theme
-
 # }}} End configuration added by Zim install
 
