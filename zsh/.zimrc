@@ -61,7 +61,8 @@ zmodule completion
 # zmodule zsh-users/zsh-syntax-highlighting
 zmodule zsh-users/zsh-history-substring-search
 zmodule zsh-users/zsh-autosuggestions
-zmodule zdharma-continuum/fast-syntax-highlighting
+# zmodule zdharma-continuum/fast-syntax-highlighting
+zmodule z-shell/F-Sy-H
 zmodule b4b4r07/zsh-vimode-visual
 zmodule ratheesh/vi-mode
 # zmodule marlonrichert/zsh-autocomplete
