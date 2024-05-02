@@ -144,7 +144,7 @@ fi
 
 # configure fzf plugin
 FZF_DEFAULT_OPTS="--no-mouse --height 50% -1 --border --margin=0,1,1,1 --reverse --multi --inline-info --header='-> FZF <-' --prompt='➜  ' --pointer='➦ ' --marker='●'"
-if (( $+commands[fd] ));then
+if (( $+commands[fd] || $(( $+commands[fdfind] )) ));then
     export FZF_DEFAULT_COMMAND='fd --type file --follow --hidden --color=never --exclude .git'
 
     _fzf_compgen_path() {
