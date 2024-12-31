@@ -46,9 +46,10 @@ zmodule ratheesh/zimfw-prompt
 
 # Additional completion definitions for Zsh.
 # zmodule zsh-users/zsh-completions --fpath src
+zmodule clarketm/zsh-completions --fpath src
+zmodule junegunn/fzf-git.sh --source fzf-git.sh
 zmodule ratheesh/zimfw-customization --root input
 zmodule ratheesh/zimfw-customization --root completion
-zmodule clarketm/zsh-completions --fpath src
 # Enables and configures smart and extensive tab completion.
 # completion must be sourced after all modules that add completion definitions.
 zmodule z-shell/zsh-fancy-completions
@@ -59,14 +60,16 @@ zmodule completion
 #
 # syntax-highlighting must be sourced after completion
 # zmodule zsh-users/zsh-syntax-highlighting
-zmodule zsh-users/zsh-history-substring-search
-zmodule zsh-users/zsh-autosuggestions
-# zmodule zdharma-continuum/fast-syntax-highlighting
-zmodule z-shell/F-Sy-H
-zmodule b4b4r07/zsh-vimode-visual
-zmodule ratheesh/vi-mode
+# zmodule zsh-users/zsh-history-substring-search
 # zmodule marlonrichert/zsh-autocomplete
-zmodule junegunn/fzf-git.sh --source fzf-git.sh
+zmodule dxrcy/zsh-history-substring-search # use this till PR#159 is 
+zmodule zsh-users/zsh-autosuggestions
+zmodule z-shell/F-Sy-H
+# zmodule zdharma-continuum/fast-syntax-highlighting
+zmodule ratheesh/vi-mode
+zmodule b4b4r07/zsh-vimode-visual
+zmodule aemonge/zsh-cycle-jobs
+# zmodule marlonrichert/zsh-autocomplete
 
 # custom init scripts
 # source $HOME/.custom/completions.zsh
