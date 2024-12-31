@@ -1,3 +1,5 @@
+# Amazon Q pre block. Keep at the top of this file.
+[[ -f "${HOME}/.local/share/amazon-q/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/.local/share/amazon-q/shell/zshrc.pre.zsh"
 # Start configuration added by Zim install {{{
 #
 # User configuration sourced by interactive shells
@@ -106,6 +108,15 @@ _comp_options+=(globdots)
 # Adjust key timeout (useful for Vi mode on Zsh)
 export KEYMAPTIMEOUT=1
 export KEYTIMEOUT=1
+
+# turn off ZLE bracketed paste in dumb term
+# otherwise turn on ZLE bracketed-paste-magic
+if [[ $TERM == dumb ]]; then
+    unset zle_bracketed_paste
+else
+    autoload -Uz bracketed-paste-magic
+    zle -N bracketed-paste bracketed-paste-magic
+fi
 
 # If this is removed, cursor after prompt behave weirdly
 [[ $TMUX = "" ]] && export TERM="wezterm"
@@ -329,14 +340,44 @@ alias vim=nvim
 LOCAL_ZSHRC=$HOME/.local.zshrc
 [[ -f $LOCAL_ZSHRC ]] && source $LOCAL_ZSHRC
 
-# turn off ZLE bracketed paste in dumb term
-# otherwise turn on ZLE bracketed-paste-magic
-if [[ $TERM == dumb ]]; then
-    unset zle_bracketed_paste
-else
-    autoload -Uz bracketed-paste-magic
-    zle -N bracketed-paste bracketed-paste-magic
+if (( ${+ZSH_AUTOSUGGEST_STRATEGY[(ie)completion]} )); then
+  autoload -Uz compinit && compinit
 fi
+
+# fzf-git settings
+# Redefine the base function with preview disabled by default
+# Redefine this function to change the options
+if (( $+commands[nvim] )); then
+  _fzf_git_fzf() {
+    fzf-tmux -p80%,60% -- \
+      --layout=reverse --multi --height=50% --min-height=20 --border \
+      --border-label-pos=2 \
+      --color='header:italic:underline,label:blue' \
+      --preview-window='hidden' \
+      --bind='ctrl-/:change-preview-window(down,50%,border-top|hidden|)' "$@"
+    }
+fi
+# zsh-autocomplete settings
+#
+zstyle ':completion:*:paths' path-completion yes
+zstyle ':completion:*:processes' command 'ps -afu $USER'
+zstyle ':autocomplete:*' min-input 1
+zstyle ':autocomplete:*' insert-unambiguous yes
+bindkey -M menuselect "^[m" accept-and-hold
+
+for keymap in 'emacs' 'viins' 'vicmd'; do
+  bindkey -M ${keymap} '^I'    menu-select
+done
+
+# bindkey -M menuselect '^M' .accept-line
+
+bindkey -M menuselect '^I'   menu-complete
+bindkey -M menuselect "$terminfo[kcbt]" reverse-menu-complete
+
+
+zstyle ':completion:*' matcher-list 'm:{a-zäöüA-ZÄÖÜ-_}={A-ZÄÖÜa-zäöü_-} r:|=*' '+ r:|[._-]=* l:|=*'
+
+# source ~/atuin.conf
 
 # }}} End configuration added by Zim install
 
