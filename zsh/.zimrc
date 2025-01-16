@@ -54,6 +54,7 @@ zmodule ratheesh/zimfw-customization --root completion
 # completion must be sourced after all modules that add completion definitions.
 zmodule z-shell/zsh-fancy-completions
 zmodule completion
+zmodule aemonge/zsh-cycle-jobs
 
 #
 # Modules that must be initialized last
