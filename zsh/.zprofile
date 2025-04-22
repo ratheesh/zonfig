@@ -143,38 +143,38 @@ else
 fi
 
 # configure fzf plugin
-FZF_DEFAULT_OPTS="--no-mouse --height 50% -1 --border --margin=0,1,1,1 --reverse --multi --inline-info --header='-> FZF <-' --prompt='➜  ' --pointer='➦ ' --marker='●'"
-if (( $+commands[fd] || $(( $+commands[fdfind] )) ));then
-    export FZF_DEFAULT_COMMAND='fd --type file --follow --hidden --color=never --exclude .git'
-
-    _fzf_compgen_path() {
-        fd --hidden --follow --hidden --color=never --exclude ".git" . "$1"
-    }
-
-    # Use fd to generate the list for directory completion
-    _fzf_compgen_dir() {
-        fd --type d --hidden --follow --color=never --exclude ".git" . "$1"
-    }
-elif (( $+commands[ag] )); then
-    echo 'WARN: fd command not installed!'
-    export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
-    # export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-else
-    echo 'WARN: fd or ag is not installed!'
-fi
-
+# FZF_DEFAULT_OPTS="--no-mouse --height 50% --border sharp --reverse --multi --inline-info --header='-> FZF <-' --prompt='➜  ' --pointer='➦ ' --marker='●'"
+# if (( $+commands[fdfind] ));then
+#     export FZF_DEFAULT_COMMAND='fdfind --type file --follow --hidden --color=never --exclude .git'
+#
+#     _fzf_compgen_path() {
+#         fdfind --hidden --follow --hidden --color=never --exclude ".git" . "$1"
+#     }
+#
+#    # Use fdfind to generate the list for directory completion
+#    _fzf_compgen_dir() {
+#        fdfind --type d --hidden --follow --color=never --exclude ".git" . "$1"
+#    }
+#  elif (( $+commands[ag] )); then
+#     echo 'WARN: fdfind command not installed!'
+#     export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
+#     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+# else
+#     echo 'WARN: fdfind or ag is not installed!'
+# fi
+#
 # export FZF_CTRL_T_OPTS="--preview '(highlight -O ansi -l {} 2> /dev/null || cat {} || tree -C {}) 2> /dev/null | head $LINES'"
 # export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
 # export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -300'"
-
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+#
+# export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 # export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -500'"
-export FZF_ALT_C_COMMAND="$FZF_DEFAULT_COMMAND"
+# export FZF_ALT_C_COMMAND="$FZF_DEFAULT_COMMAND"
 # export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --preview='(bat {} || highlight -O ansi -l {} || less -f {}) 2> /dev/null | head -500' --preview-window='right:60%' --bind='f2:toggle-preview,alt-j:preview-down,alt-k:preview-up,ctrl-d:preview-page-down,ctrl-u:preview-page-up'
 # --color=dark
-#  --color=fg:#a0a0a0,bg:-1,hl:#df678f
-#  --color=fg+:#b0b0b0,bg+:#242C44,hl+:#1BB1E7
-#  --color=info:#e79498,border:#5DADEC,prompt:#d7005f,pointer:#af5fff,marker:#e5c07b,spinner:#af5fff,header:#61afef
+# --color=fg:#a0a0a0,bg:-1,hl:#df678f
+# --color=fg+:#b0b0b0,bg+:#242C44,hl+:#1BB1E7
+# --color=info:#e79498,border:#5DADEC,prompt:#d7005f,pointer:#af5fff,marker:#e5c07b,spinner:#af5fff,header:#61afef
 # "
 
 # Remove the prefix prompt when logged as ratheesh
@@ -186,11 +186,6 @@ export USE_CCACHE=1
 # fasd initialization
 if (( $+commands[fasd] )); then
     eval "$(fasd --init auto)"
-fi
-
-# thefuck module initialization
-if (( $+commands[thefuck] )); then
-    eval $(thefuck --alias)
 fi
 
 # set neovim listening address
