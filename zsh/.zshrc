@@ -1,4 +1,3 @@
-# Amazon Q pre block. Keep at the top of this file.
 # Start configuration added by Zim install {{{
 #
 # User configuration sourced by interactive shells
@@ -341,10 +340,6 @@ fi
 alias vi=vim
 alias vim=nvim
 
-# Source local settings file
-LOCAL_ZSHRC=$HOME/.local.zshrc
-[[ -f $LOCAL_ZSHRC ]] && source $LOCAL_ZSHRC
-
 if (( ${+ZSH_AUTOSUGGEST_STRATEGY[(ie)completion]} )); then
   # autoload -Uz compinit && compinit
 fi
@@ -370,16 +365,14 @@ zstyle ':autocomplete:*' min-input 1
 zstyle ':autocomplete:*' insert-unambiguous yes
 bindkey -M menuselect "^[m" accept-and-hold
 
-# for keymap in 'emacs' 'viins' 'vicmd'; do
-#   bindkey -M ${keymap} '^I'    menu-select
-# done
-
-# bindkey -M menuselect '^M' .accept-line
-
-# bindkey -M menuselect '^I'   menu-complete
 bindkey -M menuselect "$terminfo[kcbt]" reverse-menu-complete
 
 zstyle ':completion:*' matcher-list 'm:{a-zäöüA-ZÄÖÜ-_}={A-ZÄÖÜa-zäöü_-} r:|=*' '+ r:|[._-]=* l:|=*'
+
+
+# Source local settings file
+LOCAL_ZSHRC=$HOME/.local.zshrc
+[[ -f $LOCAL_ZSHRC ]] && source $LOCAL_ZSHRC
 
 # }}} End configuration added by Zim install
 
