@@ -1,5 +1,4 @@
 # Amazon Q pre block. Keep at the top of this file.
-[[ -f "${HOME}/.local/share/amazon-q/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/.local/share/amazon-q/shell/zshrc.pre.zsh"
 # Start configuration added by Zim install {{{
 #
 # User configuration sourced by interactive shells
@@ -275,11 +274,11 @@ zle_highlight+=(paste:none)
 # bindkey '^ ' magic-space          # control-space to bypass completion
 
 # Initialize fzf - https://github.com/junegunn/fzf
-[ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh
+# [[ -f $HOME/.fzf.zsh ]] && source $HOME/.fzf.zsh
 
 # Don't use fzf completions
 if (( $+commands[fzf] )); then
-    fzf_default_completion='expand-or-complete-with-indicator'
+    fzf_default_completion='expand-or-complete-with-dots'
 fi
 
 # Customize to your needs...
@@ -347,7 +346,7 @@ LOCAL_ZSHRC=$HOME/.local.zshrc
 [[ -f $LOCAL_ZSHRC ]] && source $LOCAL_ZSHRC
 
 if (( ${+ZSH_AUTOSUGGEST_STRATEGY[(ie)completion]} )); then
-  autoload -Uz compinit && compinit
+  # autoload -Uz compinit && compinit
 fi
 
 # fzf-git settings
@@ -371,19 +370,16 @@ zstyle ':autocomplete:*' min-input 1
 zstyle ':autocomplete:*' insert-unambiguous yes
 bindkey -M menuselect "^[m" accept-and-hold
 
-for keymap in 'emacs' 'viins' 'vicmd'; do
-  bindkey -M ${keymap} '^I'    menu-select
-done
+# for keymap in 'emacs' 'viins' 'vicmd'; do
+#   bindkey -M ${keymap} '^I'    menu-select
+# done
 
 # bindkey -M menuselect '^M' .accept-line
 
-bindkey -M menuselect '^I'   menu-complete
+# bindkey -M menuselect '^I'   menu-complete
 bindkey -M menuselect "$terminfo[kcbt]" reverse-menu-complete
 
-
 zstyle ':completion:*' matcher-list 'm:{a-zäöüA-ZÄÖÜ-_}={A-ZÄÖÜa-zäöü_-} r:|=*' '+ r:|[._-]=* l:|=*'
-
-# source ~/atuin.conf
 
 # }}} End configuration added by Zim install
 
