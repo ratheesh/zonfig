@@ -50,31 +50,33 @@ zmodule clarketm/zsh-completions --fpath src
 zmodule junegunn/fzf-git.sh --source fzf-git.sh
 zmodule ratheesh/zimfw-customization --root input
 zmodule ratheesh/zimfw-customization --root completion
+zmodule docker/cli --fpath contrib/completion/zsh
+
 # Enables and configures smart and extensive tab completion.
 # completion must be sourced after all modules that add completion definitions.
-zmodule z-shell/zsh-fancy-completions
+# zmodule z-shell/zsh-fancy-completions
 zmodule completion
+
+# cycle background jobs
 zmodule aemonge/zsh-cycle-jobs
 
 #
 # Modules that must be initialized last
 #
+# zmodule marlonrichert/zsh-autocomplete
+zmodule zsh-users/zsh-history-substring-search
+zmodule zsh-users/zsh-autosuggestions
+
 # syntax-highlighting must be sourced after completion
 # zmodule zsh-users/zsh-syntax-highlighting
-# zmodule zsh-users/zsh-history-substring-search
-# zmodule marlonrichert/zsh-autocomplete
-zmodule dxrcy/zsh-history-substring-search # use this till PR#159 is 
-zmodule zsh-users/zsh-autosuggestions
 zmodule z-shell/F-Sy-H
 # zmodule zdharma-continuum/fast-syntax-highlighting
+
 zmodule ratheesh/vi-mode
 zmodule b4b4r07/zsh-vimode-visual
-zmodule aemonge/zsh-cycle-jobs
 # zmodule marlonrichert/zsh-autocomplete
 
-# custom init scripts
-# source $HOME/.custom/completions.zsh
-# source $HOME.custom/utils.zsh
+zmodule antznin/zsh-bitbake
 
 # }}} End configuration added by Zim install
 
