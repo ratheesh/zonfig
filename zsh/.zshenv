@@ -13,6 +13,7 @@ typeset -U path
 #     source "${ZDOTDIR:-$HOME}/.zprofile"
 # fi
 
+[[ -f "$HOME/.cargo/env" ]] && . $HOME/.cargo/env
+
 # vim: set ft=zsh ff=unix ts=4 sw=4 tw=0 expandtab:
 # End of File
-. "$HOME/.cargo/env"
