@@ -9,6 +9,12 @@
 # Initialize modules
 # ------------------
 
+#
+if [[ ! -o login ]];then
+    source $HOME/.zshenv
+    source $HOME/.zprofile
+fi
+
 # Define zim location
 ZIM_HOME=${ZDOTDIR:-${HOME}}/.zim
 # Download zimfw plugin manager if missing.
