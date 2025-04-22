@@ -195,10 +195,7 @@ if (( $+commands[nvr] && $+commands[nvim] ));then
 fi
 
 # autojump initialization
-[[ -s $HOME/.autojump/etc/profile.d/autojump.sh ]] && source $HOME/.autojump/etc/profile.d/autojump.sh
-
-# fzf initialization
-# [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[[ -s $HOME/.autojump/etc/profile.d/autojump.sh ]] && source $HOME/.autojump/etc/profile.d/autojump.sh || echo "WARN: autojump not installed"
 
 # Load virtualenvwrapper into the shell session.
 if (( $+commands[virtualenvwrapper_lazy.sh] )); then
