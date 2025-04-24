@@ -273,7 +273,7 @@ zle_highlight+=(paste:none)
 # bindkey '^ ' magic-space          # control-space to bypass completion
 
 # Initialize fzf - https://github.com/junegunn/fzf
-# [[ -f $HOME/.fzf.zsh ]] && source $HOME/.fzf.zsh
+[[ -f $HOME/.fzf.zsh ]] && source $HOME/.fzf.zsh
 
 # Don't use fzf completions
 if (( $+commands[fzf] )); then
