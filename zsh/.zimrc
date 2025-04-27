@@ -42,6 +42,7 @@ zmodule fzf
 zmodule git-info
 # A heavily reduced, ASCII-only version of the Spaceship and Starship prompts.
 # zmodule asciiship
+zmodule duration-info
 zmodule ratheesh/zimfw-prompt
 
 # Additional completion definitions for Zsh.
