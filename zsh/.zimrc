@@ -11,6 +11,7 @@
 # zsh vi mode
 # zmodule jeffreytse/zsh-vi-mode
 # zmodule sineto/vi-mode
+zmodule sorin-ionescu/prezto --root modules/command-not-found
 # Sets sane Zsh built-in environment options.
 zmodule environment
 # Provides handy git aliases and functions.
