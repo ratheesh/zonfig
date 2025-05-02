@@ -38,10 +38,10 @@ zmodule fzf
 #
 # Prompt
 #
-# Exposes git repository status information to prompts, used by asciiship.
+# Exposes git repository status information to prompts
 zmodule git-info
-# A heavily reduced, ASCII-only version of the Spaceship and Starship prompts.
 # zmodule asciiship
+zmodule mafredri/zsh-async --source async.zsh
 zmodule duration-info
 zmodule ratheesh/zimfw-prompt
 
