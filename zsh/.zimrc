@@ -78,6 +78,7 @@ zmodule ratheesh/vi-mode
 zmodule b4b4r07/zsh-vimode-visual
 # zmodule marlonrichert/zsh-autocomplete
 
+zmodule fdellwing/zsh-bat
 zmodule antznin/zsh-bitbake
 
 # }}} End configuration added by Zim install
