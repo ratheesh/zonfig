@@ -44,7 +44,7 @@ zmodule fzf
 # zmodule asciiship
 zmodule mafredri/zsh-async --source async.zsh
 zmodule duration-info
-zmodule ratheesh/zimfw-prompt
+zmodule ratheesh/zimfw-prompt -b refactor_without_zpty
 
 # Additional completion definitions for Zsh.
 # zmodule zsh-users/zsh-completions --fpath src
