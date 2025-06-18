@@ -36,6 +36,8 @@ zmodule ssh
 # fzf
 zmodule fzf
 
+zmodule hlissner/zsh-autopair
+
 #
 # Prompt
 #

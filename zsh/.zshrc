@@ -369,6 +369,7 @@ bindkey -M menuselect "$terminfo[kcbt]" reverse-menu-complete
 
 zstyle ':completion:*' matcher-list 'm:{a-zäöüA-ZÄÖÜ-_}={A-ZÄÖÜa-zäöü_-} r:|=*' '+ r:|[._-]=* l:|=*'
 
+(( $+functions[autopair-init] )) && autopair-init
 
 # Source local settings file
 LOCAL_ZSHRC=$HOME/.local.zshrc
