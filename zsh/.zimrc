@@ -46,7 +46,7 @@ zmodule hlissner/zsh-autopair
 # zmodule asciiship
 zmodule mafredri/zsh-async --source async.zsh
 zmodule duration-info
-zmodule ratheesh/zimfw-prompt -b refactor_without_zpty
+zmodule ratheesh/zimfw-prompt
 
 # Additional completion definitions for Zsh.
 # zmodule zsh-users/zsh-completions --fpath src
