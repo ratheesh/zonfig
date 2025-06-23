@@ -369,6 +369,15 @@ bindkey -M menuselect "$terminfo[kcbt]" reverse-menu-complete
 
 zstyle ':completion:*' matcher-list 'm:{a-zäöüA-ZÄÖÜ-_}={A-ZÄÖÜa-zäöü_-} r:|=*' '+ r:|[._-]=* l:|=*'
 
+# Go to the root of the git repo
+function cdu()
+{
+    cd ./$(git rev-parse --show-cdup)
+    if  [  $#  =  1  ];  then
+        cd  $1
+    fi
+}
+
 (( $+functions[autopair-init] )) && autopair-init
 
 # Source local settings file
