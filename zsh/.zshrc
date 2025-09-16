@@ -361,13 +361,16 @@ fi
 #
 zstyle ':completion:*:paths' path-completion yes
 zstyle ':completion:*:processes' command 'ps -afu $USER'
-zstyle ':autocomplete:*' min-input 1
-zstyle ':autocomplete:*' insert-unambiguous yes
-bindkey -M menuselect "^[m" accept-and-hold
-
-bindkey -M menuselect "$terminfo[kcbt]" reverse-menu-complete
-
 zstyle ':completion:*' matcher-list 'm:{a-zäöüA-ZÄÖÜ-_}={A-ZÄÖÜa-zäöü_-} r:|=*' '+ r:|[._-]=* l:|=*'
+
+zstyle ':autocomplete:*' min-input 1
+# zstyle ':autocomplete:*' insert-unambiguous yes
+zstyle ':autocomplete:*' add-space \
+    executables aliases functions builtins reserved-words commands
+# zstyle ':autocomplete:*' default-context history-incremental-search-backward
+
+bindkey -M menuselect "^[m" accept-and-hold
+bindkey -M menuselect "$terminfo[kcbt]" reverse-menu-complete
 
 # Go to the root of the git repo
 function u()
