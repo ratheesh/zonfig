@@ -383,6 +383,11 @@ function u()
 
 (( $+functions[autopair-init] )) && autopair-init
 
+# zoxide init
+# Configure zoxide to replace cd command
+export _ZO_ECHO='1'
+eval "$(zoxide init zsh --cmd j)"
+
 # Source local settings file
 LOCAL_ZSHRC=$HOME/.local.zshrc
 [[ -f $LOCAL_ZSHRC ]] && source $LOCAL_ZSHRC
