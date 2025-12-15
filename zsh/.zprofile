@@ -19,19 +19,30 @@ fi
 #
 
 if (( $+commands[nvim] )); then
-    export VISUAL='nvim'
-    export EDITOR='nvim'
-    export GIT_EDITOR='nvim'
-else
+    export EDITOR=nvim visudo
+    export VISUAL=nvim visudo
+    export SUDO_EDITOR=nvim
+    export GIT_EDITOR=nvim
+elif (( $+commands[vim] ));then
     export VISUAL='vim'
     export EDITOR='vim'
+    export SUDO_EDITOR='vim'
     export GIT_EDITOR='vim'
+else
+    export VISUAL='nano'
+    export EDITOR='nano'
+    export SUDO_EDITOR='nano'
+    export GIT_EDITOR='nano'
 fi
 
 export ALTERNATE_EDITOR=""
 # export LESS_TERMCAP_md="$ORANGE"
 export MINICOM="-m -c on -w -z"	# start minicom in color
-export PAGER="less"
+
+if [[ -x "$(command -v bat)" ]]; then
+	# export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+	export PAGER=less
+fi
 
 if [[ -n $SSH_CONNECTION ]]; then
     export EDITOR=$EDITOR
