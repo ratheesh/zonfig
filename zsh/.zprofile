@@ -154,39 +154,55 @@ else
 fi
 
 # configure fzf plugin
-# FZF_DEFAULT_OPTS="--no-mouse --height 50% --border sharp --reverse --multi --inline-info --header='-> FZF <-' --prompt='➜  ' --pointer='➦ ' --marker='●'"
-# if (( $+commands[fdfind] ));then
-#     export FZF_DEFAULT_COMMAND='fdfind --type file --follow --hidden --color=never --exclude .git'
-#
-#     _fzf_compgen_path() {
-#         fdfind --hidden --follow --hidden --color=never --exclude ".git" . "$1"
-#     }
-#
-#    # Use fdfind to generate the list for directory completion
-#    _fzf_compgen_dir() {
-#        fdfind --type d --hidden --follow --color=never --exclude ".git" . "$1"
-#    }
-#  elif (( $+commands[ag] )); then
-#     echo 'WARN: fdfind command not installed!'
-#     export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
-#     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-# else
-#     echo 'WARN: fdfind or ag is not installed!'
-# fi
-#
-# export FZF_CTRL_T_OPTS="--preview '(highlight -O ansi -l {} 2> /dev/null || cat {} || tree -C {}) 2> /dev/null | head $LINES'"
-# export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
-# export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -300'"
-#
-# export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-# export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -500'"
-# export FZF_ALT_C_COMMAND="$FZF_DEFAULT_COMMAND"
-# export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --preview='(bat {} || highlight -O ansi -l {} || less -f {}) 2> /dev/null | head -500' --preview-window='right:60%' --bind='f2:toggle-preview,alt-j:preview-down,alt-k:preview-up,ctrl-d:preview-page-down,ctrl-u:preview-page-up'
-# --color=dark
-# --color=fg:#a0a0a0,bg:-1,hl:#df678f
-# --color=fg+:#b0b0b0,bg+:#242C44,hl+:#1BB1E7
-# --color=info:#e79498,border:#5DADEC,prompt:#d7005f,pointer:#af5fff,marker:#e5c07b,spinner:#af5fff,header:#61afef
-# "
+if [[ -x "$(command -v fzf)" ]]; then
+    export FZF_DEFAULT_OPTS="--height 50% --tmux 80%,60% \
+        --layout reverse --multi --min-height 20+ --border \
+        --header-border horizontal \
+        --pointer='󰁕 ' --marker='•' --prompt='➜  ' \
+        --border-label-pos 1 \
+        --color 'label:blue' \
+        --preview-window 'hidden,right,50%' --preview-border line \
+        --bind 'f2:toggle-preview,ctrl-/:change-preview-window(down,50%|hidden|),alt-j:preview-down,alt-k:preview-up,ctrl-d:preview-page-down,ctrl-u:preview-page-up'"
+
+	export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
+	  --info=inline-right \
+	  --ansi \
+	  --layout=reverse \
+	  --border=rounded \
+	  --color=border:#27a1b9 \
+	  --color=fg:#c0caf5 \
+	  --color=header:#ff9e64 \
+	  --color=hl+:#2ac3de \
+	  --color=hl:#2ac3de \
+	  --color=info:#545c7e \
+	  --color=marker:#ff007c \
+	  --color=pointer:#ff007c \
+	  --color=prompt:#2ac3de \
+	  --color=query:#c0caf5:regular \
+	  --color=scrollbar:#27a1b9 \
+	  --color=separator:#ff007c \
+	  --color=spinner:#ff007c \
+	"
+fi
+
+if (( $+commands[fdfind] ));then
+    export FZF_DEFAULT_COMMAND='fdfind --type file --follow --hidden --color=never --exclude .git'
+
+    _fzf_compgen_path() {
+        fdfind --hidden --follow --hidden --color=never --exclude ".git" . "$1"
+    }
+
+   # Use fdfind to generate the list for directory completion
+   _fzf_compgen_dir() {
+       fdfind --type d --hidden --follow --color=never --exclude ".git" . "$1"
+   }
+ elif (( $+commands[ag] )); then
+    echo 'WARN: fdfind command not installed!'
+    export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+else
+    echo 'WARN: fdfind or ag is not installed!'
+fi
 
 # Remove the prefix prompt when logged as ratheesh
 export DEFAULT_USER=`whoami`
