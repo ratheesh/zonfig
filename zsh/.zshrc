@@ -74,7 +74,7 @@ setopt nohashdirs            # avoid having to run `rehash` on each new executab
 setopt autopushd
 setopt completealiases
 setopt pushdignoredups
-setopt pushdminus
+# setopt pushdminus         # enabling this will break directory-stack completion
 setopt alias_func_def       # allow alias with function names
 setopt interactivecomments  # allows you to type Bash style comments on your command line
 
