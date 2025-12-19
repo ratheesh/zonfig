@@ -155,10 +155,10 @@ fi
 
 # configure fzf plugin
 if [[ -x "$(command -v fzf)" ]]; then
-    export FZF_DEFAULT_OPTS="--height 50% --tmux 80%,60% \
+    export FZF_DEFAULT_OPTS="--height 50% --tmux 60%,50% \
         --layout reverse --multi --min-height 20+ --border \
         --header-border horizontal \
-        --pointer='󰁕 ' --marker='•' --prompt='➜  ' \
+        --pointer='➤ ' --marker='•' --prompt='➜  ' \
         --border-label-pos 1 \
         --color 'label:blue' \
         --preview-window 'hidden,right,50%' --preview-border line \
@@ -169,18 +169,19 @@ if [[ -x "$(command -v fzf)" ]]; then
 	  --ansi \
 	  --layout=reverse \
 	  --border=rounded \
-	  --color=border:#27a1b9 \
-	  --color=fg:#c0caf5 \
-	  --color=header:#ff9e64 \
-	  --color=hl+:#2ac3de \
+	  --color=border:#474747 \
+	  --color=fg:#c0c0c0 \
+	  --color=header:#73918C \
+	  --color=bg+:#000000 \
+	  --color=hl+:#ff007c:italic \
 	  --color=hl:#2ac3de \
 	  --color=info:#545c7e \
-	  --color=marker:#ff007c \
-	  --color=pointer:#ff007c \
-	  --color=prompt:#2ac3de \
+	  --color=marker:#ff007c  \
+	  --color=pointer:#7e3b91 \
+	  --color=prompt:#5f547d \
 	  --color=query:#c0caf5:regular \
-	  --color=scrollbar:#27a1b9 \
-	  --color=separator:#ff007c \
+	  --color=scrollbar:#5f547d \
+	  --color=separator:#3b4c68 \
 	  --color=spinner:#ff007c \
 	"
 fi
