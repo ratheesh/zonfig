@@ -155,33 +155,34 @@ fi
 
 # configure fzf plugin
 if [[ -x "$(command -v fzf)" ]]; then
-    export FZF_DEFAULT_OPTS="--height 50% --tmux 80%,60% \
-        --layout reverse --multi --min-height 20+ --border \
-        --header-border horizontal \
-        --pointer='󰁕 ' --marker='•' --prompt='➜  ' \
-        --border-label-pos 1 \
-        --color 'label:blue' \
-        --preview-window 'hidden,right,50%' --preview-border line \
-        --bind 'f2:toggle-preview,ctrl-/:change-preview-window(down,50%|hidden|),alt-j:preview-down,alt-k:preview-up,ctrl-d:preview-page-down,ctrl-u:preview-page-up'"
+    export FZF_DEFAULT_OPTS="--height 50% --tmux 60%,50%              \
+        --layout reverse --multi --min-height 20+ --border            \
+        --header-border horizontal                                    \
+        --pointer='➤ ' --marker='•' --prompt='➜  '                    \
+        --border-label-pos 1                                          \
+        --color 'label:blue'                                          \
+        --preview-window 'hidden,right,50%' --preview-border line     \
+        --bind 'f2:toggle-preview'"
 
 	export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
-	  --info=inline-right \
-	  --ansi \
-	  --layout=reverse \
-	  --border=rounded \
-	  --color=border:#27a1b9 \
-	  --color=fg:#c0caf5 \
-	  --color=header:#ff9e64 \
-	  --color=hl+:#2ac3de \
-	  --color=hl:#2ac3de \
-	  --color=info:#545c7e \
-	  --color=marker:#ff007c \
-	  --color=pointer:#ff007c \
-	  --color=prompt:#2ac3de \
-	  --color=query:#c0caf5:regular \
-	  --color=scrollbar:#27a1b9 \
-	  --color=separator:#ff007c \
-	  --color=spinner:#ff007c \
+	  --info=inline-right                      \
+	  --ansi                                   \
+	  --layout=reverse                         \
+	  --border=rounded                         \
+	  --color=border:#283838                   \
+	  --color=fg:#c0c0c0                       \
+	  --color=header:#73918C                   \
+	  --color=bg+:#000000                      \
+	  --color=hl+:#ff007c:italic               \
+	  --color=hl:#2ac3de                       \
+	  --color=info:#545c7e                     \
+	  --color=marker:#ff007c                   \
+	  --color=pointer:#029456                  \
+	  --color=prompt:#D8226C                   \
+	  --color=query:#c0caf5:regular            \
+	  --color=scrollbar:#5f547d                \
+	  --color=separator:#6C8494                \
+	  --color=spinner:#ff007c                  \
 	"
 fi
 
