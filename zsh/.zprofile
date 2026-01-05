@@ -184,6 +184,7 @@ if [[ -x "$(command -v fzf)" ]]; then
 	  --color=separator:#6C8494                \
 	  --color=spinner:#ff007c                  \
 	"
+    export _ZO_FZF_OPTS=$FZF_DEFAULT_OPTS
 fi
 
 if (( $+commands[fdfind] ));then
