@@ -86,6 +86,7 @@ typeset -gU cdpath fpath mailpath path
 path=(
     $HOME/bin
     $HOME/.local/bin
+    $HOME/.fzf/bin
     $HOME/.autojump/bin
     $HOME/.cargo/bin
     /usr/local/{bin,sbin}

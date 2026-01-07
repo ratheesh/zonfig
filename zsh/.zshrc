@@ -274,6 +274,7 @@ zle_highlight+=(paste:none)
 
 # Initialize fzf - https://github.com/junegunn/fzf
 [[ -f $HOME/.fzf.zsh ]] && source $HOME/.fzf.zsh
+(( $+commands[fzf] )) && source <(fzf --zsh)
 
 # Don't use fzf completions
 if (( $+commands[fzf] )); then
