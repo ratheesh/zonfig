@@ -272,15 +272,6 @@ zle_highlight+=(paste:none)
 # global alias expansion keys
 # bindkey '^ ' magic-space          # control-space to bypass completion
 
-# Initialize fzf - https://github.com/junegunn/fzf
-[[ -f $HOME/.fzf.zsh ]] && source $HOME/.fzf.zsh
-(( $+commands[fzf] )) && source <(fzf --zsh)
-
-# Don't use fzf completions
-if (( $+commands[fzf] )); then
-    fzf_default_completion='expand-or-complete-with-dots'
-fi
-
 # Customize to your needs...
 # add custom users for auto completion
 users=($USER rreddy "$users")
@@ -324,20 +315,6 @@ PERL_LOCAL_LIB_ROOT="$HOME/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"
 PERL_MB_OPT="--install_base \"$HOME/perl5\""; export PERL_MB_OPT;
 PERL_MM_OPT="INSTALL_BASE=$HOME/perl5"; export PERL_MM_OPT;
 
-# colorize output of few utilities
-if (( $+commands[grc] )); then
-    alias ping='/usr/bin/grc -s --colour=auto ping'
-    alias df='/usr/bin/grc -s --colour=auto df -kh'
-    alias ifconfig='/usr/bin/grc -s --colour=auto ifconfig'
-    alias route='/usr/bin/grc -s --colour=auto route'
-    alias irclog='/usr/bin/grc -s --colour=auto irclog'
-    # alias ls='/usr/bin/grc -s --colour=auto ls'
-    alias mount='/usr/bin/grc -s --colour=auto mount'
-    alias gcc='/usr/bin/grc -s --colour=auto gcc'
-    alias cal='/usr/bin/grc -s --colour=auto cal'
-    alias ncal='/usr/bin/grc -s --colour=auto ncal -w'
-fi
-
 alias vi=vim
 alias vim=nvim
 
@@ -345,19 +322,6 @@ if (( ${+ZSH_AUTOSUGGEST_STRATEGY[(ie)completion]} )); then
   # autoload -Uz compinit && compinit
 fi
 
-# fzf-git settings
-# Redefine the base function with preview disabled by default
-# Redefine this function to change the options
-if (( $+commands[nvim] )); then
-  _fzf_git_fzf() {
-    fzf-tmux -p80%,60% -- \
-      --layout=reverse --multi --height=50% --min-height=20 --border \
-      --border-label-pos=2 \
-      --color='header:italic:underline,label:blue' \
-      --preview-window='hidden' \
-      --bind='ctrl-/:change-preview-window(down,50%,border-top|hidden|)' "$@"
-    }
-fi
 # zsh-autocomplete settings
 #
 zstyle ':completion:*:paths' path-completion yes
@@ -381,13 +345,6 @@ function u()
         cd  $1
     fi
 }
-
-(( $+functions[autopair-init] )) && autopair-init
-
-# zoxide init
-# Configure zoxide to replace cd command
-export _ZO_ECHO='1'
-eval "$(zoxide init zsh --cmd j)"
 
 # Source local settings file
 LOCAL_ZSHRC=$HOME/.local.zshrc

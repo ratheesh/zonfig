@@ -125,28 +125,6 @@ TMPPREFIX="${TMPDIR%/}/zsh"
 
 # common environment variable exports
 
-# generic env setting
-# export TERMINFO=/lib/terminfo	# required for gdb-tui
-# export TZ='Asia/Kolkata'; export TZ
-# export LC_ALL='en_US.UTF-8'
-
-# if [[ $(echotc Co) -ge 256 ]]; then
-#     # 256 color terminals
-#     export GREP_COLORS="mt=03;04;38;5;2;48;5;234:sl=:cx=:fn=38;5;65:ln=38;5;30:bn=37:se=38;5;198"
-# else
-#     export GREP_COLORS='ms=03;04;91:mc=01;33;100:sl=:cx=:fn=94:ln=32:bn=33:se=35'
-# fi
-
-# autojump configuration
-export AUTOJUMP_IGNORE_CASE=1 # ignore case in autojump completion
-export AUTOJUMP_AUTOCOMPLETE_CMDS='cp vim make'
-# lazy load autojump plugin
-# j() {
-#     unset -f j
-#     [[ -s $HOME/.autojump/etc/profile.d/autojump.sh ]] && . $HOME/.autojump/etc/profile.d/autojump.sh
-#     j "$@"
-# }
-
 # configure bat application
 if (( $+commands[bat] ));then
     export BAT_CONFIG_PATH="$HOME/bat.conf"
@@ -154,7 +132,46 @@ else
     echo "WARN:bat app is not installed!"
 fi
 
-# configure fzf plugin
+# Remove the prefix prompt when logged as ratheesh
+export DEFAULT_USER=`whoami`
+
+# enable ccache for faster rebuilds
+export USE_CCACHE=1
+
+# set neovim listening address
+if (( $+commands[nvr] && $+commands[nvim] ));then
+    export NVIM_LISTEN_ADDRESS=/tmp/nvimsocket
+    alias nvr='nvr -s --remote'
+fi
+
+# Load virtualenvwrapper into the shell session.
+if (( $+commands[virtualenvwrapper_lazy.sh] )); then
+    export VIRTUALENV_USE_DISTRIBUTE=1
+    export VIRTUALENV_DISTRIBUTE=1
+    # Disable default virtualenv prompt.
+    VIRTUAL_ENV_DISABLE_PROMPT=1
+
+    # Python virtualenvwrapper settings
+    # Set the directory where virtual environments are stored.
+    export WORKON_HOME="$HOME/.virtualenvs"
+    export VIRTUALENVWRAPPER_VIRTUALENV_ARGS=''
+
+    # Tell pip to respect virtualenv
+    export PIP_RESPECT_VIRTUALENV=true
+    export PIP_VIRTUALENV_BASE=$WORKON_HOME
+
+    if [ "$VIRTUALENVWRAPPER_PYTHON" = "" ]
+    then
+        VIRTUALENVWRAPPER_PYTHON="$(command \which python)"
+    fi
+
+    # Don't create *.pyc files by default
+    export PYTHONDONTWRITEBYTECODE=1
+
+    source "$commands[virtualenvwrapper_lazy.sh]"
+fi
+
+# Initialize fzf - https://github.com/junegunn/fzf
 if [[ -x "$(command -v fzf)" ]]; then
     export FZF_DEFAULT_OPTS="--height 50% --tmux 60%,50%              \
         --layout reverse --multi --min-height 20+ --border            \
@@ -185,7 +202,6 @@ if [[ -x "$(command -v fzf)" ]]; then
 	  --color=separator:#6C8494                \
 	  --color=spinner:#ff007c                  \
 	"
-    export _ZO_FZF_OPTS=$FZF_DEFAULT_OPTS
 fi
 
 if (( $+commands[fdfind] ));then
@@ -207,51 +223,44 @@ else
     echo 'WARN: fdfind or ag is not installed!'
 fi
 
-# Remove the prefix prompt when logged as ratheesh
-export DEFAULT_USER=`whoami`
+(( $+commands[fzf] )) && source <(fzf --zsh)
 
-# enable ccache for faster rebuilds
-export USE_CCACHE=1
-
-# fasd initialization
-if (( $+commands[fasd] )); then
-    eval "$(fasd --init auto)"
+# fzf-git settings
+# Redefine the base function with preview disabled by default
+# Redefine this function to change the options
+if (( $+commands[nvim] )); then
+  _fzf_git_fzf() {
+    fzf-tmux -p80%,60% -- \
+      --layout=reverse --multi --height=50% --min-height=20 --border \
+      --border-label-pos=2 \
+      --color='header:italic:underline,label:blue' \
+      --preview-window='hidden' \
+      --bind='ctrl-/:change-preview-window(down,50%,border-top|hidden|)' "$@"
+    }
 fi
 
-# set neovim listening address
-if (( $+commands[nvr] && $+commands[nvim] ));then
-    export NVIM_LISTEN_ADDRESS=/tmp/nvimsocket
-    alias nvr='nvr -s --remote'
-fi
+# zoxide init
+# Configure zoxide to replace cd command
+export _ZO_ECHO='1'
+export _ZO_FZF_OPTS=$FZF_DEFAULT_OPTS
+eval "$(zoxide init zsh --cmd j)"
 
-# autojump initialization
-[[ -s $HOME/.autojump/etc/profile.d/autojump.sh ]] && source $HOME/.autojump/etc/profile.d/autojump.sh || echo "WARN: autojump not installed"
+[[ -f "$HOME/.cargo/env" ]] && . $HOME/.cargo/env
 
-# Load virtualenvwrapper into the shell session.
-if (( $+commands[virtualenvwrapper_lazy.sh] )); then
-    export VIRTUALENV_USE_DISTRIBUTE=1
-    export VIRTUALENV_DISTRIBUTE=1
-    # Disable default virtualenv prompt.
-    VIRTUAL_ENV_DISABLE_PROMPT=1
+(( $+functions[autopair-init] )) && autopair-init
 
-    # Python virtualenvwrapper settings
-    # Set the directory where virtual environments are stored.
-    export WORKON_HOME="$HOME/.virtualenvs"
-    export VIRTUALENVWRAPPER_VIRTUALENV_ARGS=''
-
-    # Tell pip to respect virtualenv
-    export PIP_RESPECT_VIRTUALENV=true
-    export PIP_VIRTUALENV_BASE=$WORKON_HOME
-
-    if [ "$VIRTUALENVWRAPPER_PYTHON" = "" ]
-    then
-        VIRTUALENVWRAPPER_PYTHON="$(command \which python)"
-    fi
-
-    # Don't create *.pyc files by default
-    export PYTHONDONTWRITEBYTECODE=1
-
-    source "$commands[virtualenvwrapper_lazy.sh]"
+# colorize output of compatible standard utilities
+if (( $+commands[grc] )); then
+    alias ping='/usr/bin/grc -s --colour=auto ping'
+    alias df='/usr/bin/grc -s --colour=auto df -kh'
+    alias ifconfig='/usr/bin/grc -s --colour=auto ifconfig'
+    alias route='/usr/bin/grc -s --colour=auto route'
+    alias irclog='/usr/bin/grc -s --colour=auto irclog'
+    # alias ls='/usr/bin/grc -s --colour=auto ls'
+    alias mount='/usr/bin/grc -s --colour=auto mount'
+    alias gcc='/usr/bin/grc -s --colour=auto gcc'
+    alias cal='/usr/bin/grc -s --colour=auto cal'
+    alias ncal='/usr/bin/grc -s --colour=auto ncal -w'
 fi
 
 # vim: set ft=zsh ff=unix ts=4 sw=4 tw=0 expandtab:
