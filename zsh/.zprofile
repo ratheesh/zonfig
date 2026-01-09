@@ -242,7 +242,7 @@ fi
 # zoxide init
 # Configure zoxide to replace cd command
 export _ZO_ECHO='1'
-export _ZO_FZF_OPTS=$FZF_DEFAULT_OPTS
+export _ZO_FZF_OPTS="$FZF_DEFAULT_OPTS +m"
 eval "$(zoxide init zsh --cmd j)"
 
 [[ -f "$HOME/.cargo/env" ]] && . $HOME/.cargo/env
