@@ -346,6 +346,9 @@ function u()
     fi
 }
 
+# Initialize fzf at last as keybindings would have overridden by other plugins
+[[ -f "$HOME/.fzf.zsh" ]] && source $HOME/.fzf.zsh || echo "fzf is not initialized properly!"
+
 # Source local settings file
 LOCAL_ZSHRC=$HOME/.local.zshrc
 [[ -f $LOCAL_ZSHRC ]] && source $LOCAL_ZSHRC
