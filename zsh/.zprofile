@@ -202,6 +202,7 @@ if [[ -x "$(command -v fzf)" ]]; then
 	  --color=separator:#6C8494                \
 	  --color=spinner:#ff007c                  \
 	"
+    export FZF_CTRL_R_OPTS="$FZF_DEFAULT_OPTS +m"
 fi
 
 if (( $+commands[fdfind] ));then
