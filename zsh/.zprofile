@@ -93,6 +93,7 @@ path=(
     /{bin,sbin}
     /usr/{bin,sbin}
     /usr/local/{bin,sbin}
+    $HOME/.local/share/gem/ruby/3.4.0/bin
     /usr/{bin,sbin}
     $path[@]
 )
