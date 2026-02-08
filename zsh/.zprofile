@@ -206,23 +206,23 @@ if [[ -x "$(command -v fzf)" ]]; then
     export FZF_CTRL_R_OPTS="$FZF_DEFAULT_OPTS +m"
 fi
 
-if (( $+commands[fdfind] ));then
-    export FZF_DEFAULT_COMMAND='fdfind --type file --follow --hidden --color=never --exclude .git'
+if (( $+commands[fd] ));then
+    export FZF_DEFAULT_COMMAND='fd --type file --follow --hidden --color=never --exclude .git'
 
     _fzf_compgen_path() {
-        fdfind --hidden --follow --hidden --color=never --exclude ".git" . "$1"
+        fd --hidden --follow --hidden --color=never --exclude ".git" . "$1"
     }
 
    # Use fdfind to generate the list for directory completion
    _fzf_compgen_dir() {
-       fdfind --type d --hidden --follow --color=never --exclude ".git" . "$1"
+       fd --type d --hidden --follow --color=never --exclude ".git" . "$1"
    }
  elif (( $+commands[ag] )); then
-    echo 'WARN: fdfind command not installed!'
+    echo 'WARN: fd command not installed!'
     export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 else
-    echo 'WARN: fdfind or ag is not installed!'
+    echo 'WARN: fd or ag is not installed!'
 fi
 
 (( $+commands[fzf] )) && source <(fzf --zsh)
