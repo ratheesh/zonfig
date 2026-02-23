@@ -74,9 +74,10 @@ setopt nohashdirs            # avoid having to run `rehash` on each new executab
 setopt autopushd
 setopt completealiases
 setopt pushdignoredups
-# setopt pushdminus         # enabling this will break directory-stack completion
-setopt alias_func_def       # allow alias with function names
-setopt interactivecomments  # allows you to type Bash style comments on your command line
+unsetopt pushdsilent         # print the directory stack after pushd/popd
+setopt pushdminus            # use minus navigation for directory stack
+setopt alias_func_def        # allow alias with function names
+setopt interactivecomments   # allows you to type Bash style comments on your command line
 
 unsetopt print_exit_value    # print return value if non-zero
 unsetopt correct_all	     # do not correct all automatically
