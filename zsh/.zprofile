@@ -230,7 +230,7 @@ fi
 # fzf-git settings
 # Redefine the base function with preview disabled by default
 # Redefine this function to change the options
-if (( $+commands[nvim] )); then
+if (( $+commands[fzf-tmux] )); then
   _fzf_git_fzf() {
     fzf-tmux -p80%,60% -- \
       --layout=reverse --multi --height=50% --min-height=20 --border \
@@ -239,6 +239,8 @@ if (( $+commands[nvim] )); then
       --preview-window='hidden' \
       --bind='ctrl-/:change-preview-window(down,50%,border-top|hidden|)' "$@"
     }
+else
+  echo "fzf is not installed!"
 fi
 
 # zoxide init
