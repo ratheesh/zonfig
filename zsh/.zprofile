@@ -129,8 +129,6 @@ TMPPREFIX="${TMPDIR%/}/zsh"
 # configure bat application
 if (( $+commands[bat] ));then
     export BAT_CONFIG_PATH="$HOME/bat.conf"
-else
-    echo "WARN:bat app is not installed!"
 fi
 
 # Remove the prefix prompt when logged as ratheesh
@@ -218,11 +216,8 @@ if (( $+commands[fd] ));then
        fd --type d --hidden --follow --color=never --exclude ".git" . "$1"
    }
  elif (( $+commands[ag] )); then
-    echo 'WARN: fd command not installed!'
     export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-else
-    echo 'WARN: fd or ag is not installed!'
 fi
 
 (( $+commands[fzf] )) && source <(fzf --zsh)
@@ -238,9 +233,7 @@ if (( $+commands[fzf-tmux] )); then
       --color='header:italic:underline,label:blue' \
       --preview-window='hidden' \
       --bind='ctrl-/:change-preview-window(down,50%,border-top|hidden|)' "$@"
-    }
-else
-  echo "fzf is not installed!"
+  }
 fi
 
 # zoxide init
