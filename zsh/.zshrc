@@ -71,9 +71,9 @@ setopt correct               # try to correct spelling of commands
 setopt extended_glob         # activate complex pattern globbing
 setopt glob_dots             # include dotfiles in globbing
 setopt nohashdirs            # avoid having to run `rehash` on each new executable in $PATH
-setopt autopushd
-setopt completealiases
-setopt pushdignoredups
+setopt autopushd             # Automatically push new folder during cd command
+setopt completealiases       # complete aliases
+setopt pushdignoredups       # ignore pushd entries
 unsetopt pushdsilent         # print the directory stack after pushd/popd
 setopt pushdminus            # use minus navigation for directory stack
 setopt alias_func_def        # allow alias with function names
