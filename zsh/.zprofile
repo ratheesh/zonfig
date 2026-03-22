@@ -220,7 +220,7 @@ if (( $+commands[fd] ));then
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 fi
 
-(( $+commands[fzf] )) && source <(fzf --zsh)
+(( $+commands[fzf] )) && eval "$(fzf --zsh)"
 
 # fzf-git settings
 # Redefine the base function with preview disabled by default

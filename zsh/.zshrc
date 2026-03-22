@@ -53,6 +53,7 @@ setopt complete_in_word      # allow tab completion in the middle of a word
 setopt always_to_end         # Place cursor at end after completion
 setopt no_auto_remove_slash  # do not remove slash on directory completion
 setopt append_history        # append
+setopt extended_history      # append
 setopt hist_ignore_all_dups  # no duplicate
 setopt hist_reduce_blanks    # trim blanks
 setopt hist_verify           # show before executing history commands
@@ -61,7 +62,7 @@ setopt share_history         # share hist between sessions
 setopt bang_hist             # !keyword
 setopt MULTIOS               # write to multiple files
 setopt auto_remove_slash     # self explicit
-setopt clobber               # clobber on redirect
+setopt no_clobber            # clobber on redirect
 setopt interactive_comments  # enable interactive comments
 setopt aliases               # enable aliases
 setopt auto_cd               # if command is a path, cd into it
@@ -78,6 +79,8 @@ unsetopt pushdsilent         # print the directory stack after pushd/popd
 setopt pushdminus            # use minus navigation for directory stack
 setopt alias_func_def        # allow alias with function names
 setopt interactivecomments   # allows you to type Bash style comments on your command line
+setopt monitor               # Support monitor background jobs
+setopt rm_star_silent        # ask for confirmation for `rm *' or `rm path/*'
 
 unsetopt print_exit_value    # print return value if non-zero
 unsetopt correct_all	     # do not correct all automatically
