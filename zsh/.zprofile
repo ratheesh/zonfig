@@ -1,4 +1,4 @@
-#
+#ctest --preset linux-coverage-test
 # Executes commands at login pre-zshrc.
 #
 # Authors:
@@ -19,8 +19,8 @@ fi
 #
 
 if (( $+commands[nvim] )); then
-    export EDITOR=nvim visudo
-    export VISUAL=nvim visudo
+    export EDITOR=nvim
+    export VISUAL=nvim
     export SUDO_EDITOR=nvim
     export GIT_EDITOR=nvim
 elif (( $+commands[vim] ));then
@@ -39,27 +39,21 @@ export ALTERNATE_EDITOR=""
 # export LESS_TERMCAP_md="$ORANGE"
 export MINICOM="-m -c on -w -z"	# start minicom in color
 
-if [[ -x "$(command -v bat)" ]]; then
+if (( $+commands[bat] )); then
 	# export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 	export PAGER=less
 fi
 
-if [[ -n $SSH_CONNECTION ]]; then
-    export EDITOR=$EDITOR
-    export GIT_EDITOR=$GIT_EDITOR
-else
-    export EDITOR=$EDITOR
-    export GIT_EDITOR=$GIT_EDITOR
-fi
 
 # misc
 export GCC_COLOR="auto"
-export TERM="wezterm"
 export COLORTERM="wezterm"
 
 # disable soft flow control
-stty ixany
-stty ixoff -ixon
+if [[ -t 0 ]]; then
+    stty ixany
+    stty ixoff -ixon
+fi
 #
 # Language
 #
@@ -89,14 +83,25 @@ path=(
     $HOME/.fzf/bin
     $HOME/.autojump/bin
     $HOME/.cargo/bin
+    /usr/lib/llvm-3.6/bin
+    /opt/SEGGER/JLink
     /usr/local/{bin,sbin}
     /{bin,sbin}
     /usr/{bin,sbin}
-    /usr/local/{bin,sbin}
     $HOME/.local/share/gem/ruby/3.4.0/bin
-    /usr/{bin,sbin}
+    $HOME/gems/bin
+    $HOME/go/bin
+    $HOME/.local/share/nvim/mason/bin
     $path[@]
 )
+
+export GEM_HOME=$HOME/gems
+export GOPATH=$HOME/go
+PATH="$HOME/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="$HOME/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="$HOME/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"$HOME/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=$HOME/perl5"; export PERL_MM_OPT;
 
 #
 # Less
@@ -132,7 +137,7 @@ if (( $+commands[bat] ));then
 fi
 
 # Remove the prefix prompt when logged as ratheesh
-export DEFAULT_USER=`whoami`
+export DEFAULT_USER=$(whoami)
 
 # enable ccache for faster rebuilds
 export USE_CCACHE=1
@@ -140,7 +145,6 @@ export USE_CCACHE=1
 # set neovim listening address
 if (( $+commands[nvr] && $+commands[nvim] ));then
     export NVIM_LISTEN_ADDRESS=/tmp/nvimsocket
-    alias nvr='nvr -s --remote'
 fi
 
 # Load virtualenvwrapper into the shell session.
@@ -220,7 +224,15 @@ if (( $+commands[fd] ));then
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 fi
 
-(( $+commands[fzf] )) && eval "$(fzf --zsh)"
+if (( $+commands[fzf] )) && [[ -o interactive ]]; then
+    _fzf_cache="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/fzf-init.zsh"
+    if [[ ! -f $_fzf_cache || $commands[fzf] -nt $_fzf_cache ]]; then
+        mkdir -p "${_fzf_cache:h}"
+        fzf --zsh >| $_fzf_cache
+    fi
+    source $_fzf_cache
+    unset _fzf_cache
+fi
 
 # fzf-git settings
 # Redefine the base function with preview disabled by default
@@ -240,11 +252,18 @@ fi
 # Configure zoxide to replace cd command
 export _ZO_ECHO='1'
 export _ZO_FZF_OPTS="$FZF_DEFAULT_OPTS +m"
-eval "$(zoxide init zsh --cmd j)"
+if (( $+commands[zoxide] )) && [[ -o interactive ]]; then
+    _zoxide_cache="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zoxide-init.zsh"
+    if [[ ! -f $_zoxide_cache || $commands[zoxide] -nt $_zoxide_cache ]]; then
+        mkdir -p "${_zoxide_cache:h}"
+        zoxide init zsh --cmd j >| $_zoxide_cache
+    fi
+    source $_zoxide_cache
+    unset _zoxide_cache
+fi
 
 [[ -f "$HOME/.cargo/env" ]] && . $HOME/.cargo/env
 
-(( $+functions[autopair-init] )) && autopair-init
 
 # colorize output of compatible standard utilities
 if (( $+commands[grc] )); then

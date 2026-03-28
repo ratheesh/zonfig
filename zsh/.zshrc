@@ -9,7 +9,6 @@
 
 #
 if [[ ! -o login ]];then
-    source $HOME/.zshenv
     source $HOME/.zprofile
 fi
 
@@ -31,14 +30,15 @@ if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZDOTDIR:-${HOME}}/.zimrc ]]; then
 fi
 # Initialize modules.
 source ${ZIM_HOME}/init.zsh
+(( $+functions[autopair-init] )) && autopair-init
 
 # -----------------
 # Zsh configuration
 # -----------------
-# support for bash completion
-
+# support for bash completion — loaded lazily on first use of complete/compgen
 autoload bashcompinit
-bashcompinit
+complete() { unfunction complete compgen; bashcompinit; complete "$@" }
+compgen() { unfunction complete compgen; bashcompinit; compgen "$@" }
 
 # Some basic settings
 HISTSIZE=10000 # session history size
@@ -51,7 +51,6 @@ setopt multibyte             # Support multibyte support
 setopt nobgnice              # run bg jobs at full speed
 setopt complete_in_word      # allow tab completion in the middle of a word
 setopt always_to_end         # Place cursor at end after completion
-setopt no_auto_remove_slash  # do not remove slash on directory completion
 setopt append_history        # append
 setopt extended_history      # append
 setopt hist_ignore_all_dups  # no duplicate
@@ -66,7 +65,6 @@ setopt no_clobber            # clobber on redirect
 setopt interactive_comments  # enable interactive comments
 setopt aliases               # enable aliases
 setopt auto_cd               # if command is a path, cd into it
-setopt auto_remove_slash     # self explicit
 setopt chase_links           # resolve symlinks
 setopt correct               # try to correct spelling of commands
 setopt extended_glob         # activate complex pattern globbing
@@ -78,9 +76,7 @@ setopt pushdignoredups       # ignore pushd entries
 unsetopt pushdsilent         # print the directory stack after pushd/popd
 setopt pushdminus            # use minus navigation for directory stack
 setopt alias_func_def        # allow alias with function names
-setopt interactivecomments   # allows you to type Bash style comments on your command line
 setopt monitor               # Support monitor background jobs
-setopt rm_star_silent        # ask for confirmation for `rm *' or `rm path/*'
 
 unsetopt print_exit_value    # print return value if non-zero
 unsetopt correct_all	     # do not correct all automatically
@@ -129,13 +125,6 @@ fi
 # If this is removed, cursor after prompt behave weirdly
 [[ $TMUX = "" ]] && export TERM="wezterm"
 
-
-#
-# History
-#
-
-# Remove older command from the history if a duplicate is to be added.
-setopt HIST_IGNORE_ALL_DUPS
 
 #
 # Input/output
@@ -190,10 +179,8 @@ for keymap in 'emacs' 'viins' 'vicmd'; do
 done
 
 # Bind j/k in normal mode
-if [[ ${keymap} = 'vicmd' ]];then
-    bindkey -M ${keymap} "j" history-substring-search-down
-    bindkey -M ${keymap} "k" history-substring-search-up
-fi # if
+bindkey -M vicmd "j" history-substring-search-down
+bindkey -M vicmd "k" history-substring-search-up
 
 
 #
@@ -244,7 +231,7 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#606060,italic"
 
 # bindkey "^M" accept-line
 ZSH_AUTOSUGGEST_USE_ASYNC=true
-ZSH_AUTOSUGGEST_STRATEGY=(history completion match_prev_cmd)
+ZSH_AUTOSUGGEST_STRATEGY=(history match_prev_cmd)
 for keymap in 'emacs' 'viins' 'vicmd'; do
     bindkey -M ${keymap} '^\n' autosuggest-execute
 done
@@ -300,30 +287,10 @@ export stm='ARCH=arm CROSS_COMPILE=arm-none-eabi-'
 
 alias goarm='env CC=arm-linux-gnueabihf-gcc CXX=arm-linux-gnueabihf-g++ GOOS=linux GOARCH=arm GOARM=7 CGO_ENABLED=1 go'
 
-export GEM_HOME=$HOME/gems
-
-path=(
-    /usr/lib/llvm-3.6/bin	# for clang
-    /opt/SEGGER/JLink
-    $HOME/gems/bin
-    $HOME/go/bin
-    $HOME/.local/share/nvim/mason/bin
-    $HOME/.local/bin/
-    $path[@]
-)
-
-GOPATH=$HOME/go
-PATH="$HOME/perl5/bin${PATH:+:${PATH}}"; export PATH;
-PERL5LIB="$HOME/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
-PERL_LOCAL_LIB_ROOT="$HOME/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
-PERL_MB_OPT="--install_base \"$HOME/perl5\""; export PERL_MB_OPT;
-PERL_MM_OPT="INSTALL_BASE=$HOME/perl5"; export PERL_MM_OPT;
-
 alias vi=vim
 alias vim=nvim
-
-if (( ${+ZSH_AUTOSUGGEST_STRATEGY[(ie)completion]} )); then
-  # autoload -Uz compinit && compinit
+if (( $+commands[nvr] && $+commands[nvim] ));then
+    alias nvr='nvr -s --remote'
 fi
 
 # zsh-autocomplete settings
@@ -331,6 +298,10 @@ fi
 zstyle ':completion:*:paths' path-completion yes
 zstyle ':completion:*:processes' command 'ps -afu $USER'
 zstyle ':completion:*' matcher-list 'm:{a-zäöüA-ZÄÖÜ-_}={A-ZÄÖÜa-zäöü_-} r:|=*' '+ r:|[._-]=* l:|=*'
+zstyle ':completion:*' matcher-list \
+    'm:{a-zäöüA-ZÄÖÜ-_}={A-ZÄÖÜa-zäöü_-} r:|=*' \
+    '+ r:|[._-]=* l:|=*' \
+    'l:|=* r:|=*'
 
 zstyle ':autocomplete:*' min-input 1
 # zstyle ':autocomplete:*' insert-unambiguous yes
@@ -350,12 +321,22 @@ function u()
     fi
 }
 
-# Initialize fzf at last as keybindings would have overridden by other plugins
-[[ -f "$HOME/.fzf.zsh" ]] && source $HOME/.fzf.zsh || echo "fzf is not initialized properly!"
-
 # Source local settings file
 LOCAL_ZSHRC=$HOME/.local.zshrc
 [[ -f $LOCAL_ZSHRC ]] && source $LOCAL_ZSHRC
 
 # }}} End configuration added by Zim install
 
+export NVM_DIR="$HOME/.nvm"
+if [[ -s "$NVM_DIR/nvm.sh" ]]; then
+    # Lazy-load nvm — defer sourcing until nvm/node/npm/npx is first used
+    _nvm_load() {
+        unfunction nvm node npm npx 2>/dev/null
+        \. "$NVM_DIR/nvm.sh"
+        [[ -s "$NVM_DIR/bash_completion" ]] && \. "$NVM_DIR/bash_completion"
+    }
+    nvm()  { _nvm_load; nvm  "$@" }
+    node() { _nvm_load; node "$@" }
+    npm()  { _nvm_load; npm  "$@" }
+    npx()  { _nvm_load; npx  "$@" }
+fi
