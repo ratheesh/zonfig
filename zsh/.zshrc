@@ -102,9 +102,6 @@ umask 022
 # reset terminal settings if previous terminal instance terminated abnormally
 ttyctl -f
 
-# Directories
-# zstyle ':completion:*:default' list-colors ''
-
 # List hidden files and folder during completion by default
 
 _comp_options+=(globdots)
@@ -215,10 +212,6 @@ ZSH_HIGHLIGHT_STYLES[comment]='fg=242'
 # Post-init module configuration
 # ------------------------------
 
-# completions
-zstyle ':completion:*' special-dirs false
-zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS} "ma=48;5;244;1"
-
 # zsh auto-suggestions module
 for keymap in 'emacs' 'viins' 'vicmd'; do
 #     bindkey -M ${keymap} '^ ' my-autosuggest-accept
@@ -299,7 +292,19 @@ if (( $+commands[nvr] && $+commands[nvim] ));then
 fi
 
 # zsh-autocomplete settings
-#
+zstyle ':autocomplete:*' min-input 1
+zstyle ':autocomplete:*' insert-ambiguous no
+zstyle ':autocomplete:*' add-space \
+    executables aliases functions builtins reserved-words commands
+zstyle ':autocomplete:*' default-context history-incremental-search-backward
+zstyle ':autocomplete:*' min-delay 0.0
+zstyle ':autocomplete:tab:*' widget-style menu-select
+zstyle ':autocomplete:*' list-lines 16
+zstyle ':autocomplete:*' recent-dirs cdr
+zstyle ':autocomplete:*' fzf-completion no
+
+# completions
+zstyle ':completion:*' special-dirs false
 zstyle ':completion:*:paths' path-completion yes
 zstyle ':completion:*:processes' command 'ps -afu $USER'
 zstyle ':completion:*' matcher-list 'm:{a-zäöüA-ZÄÖÜ-_}={A-ZÄÖÜa-zäöü_-} r:|=*' '+ r:|[._-]=* l:|=*'
@@ -307,13 +312,6 @@ zstyle ':completion:*' matcher-list \
     'm:{a-zäöüA-ZÄÖÜ-_}={A-ZÄÖÜa-zäöü_-} r:|=*' \
     '+ r:|[._-]=* l:|=*' \
     'l:|=* r:|=*'
-
-zstyle ':autocomplete:*' min-input 1
-# zstyle ':autocomplete:*' insert-unambiguous yes
-zstyle ':autocomplete:*' add-space \
-    executables aliases functions builtins reserved-words commands
-# zstyle ':autocomplete:*' default-context history-incremental-search-backward
-
 bindkey -M menuselect "^[m" accept-and-hold
 bindkey -M menuselect "$terminfo[kcbt]" reverse-menu-complete
 
@@ -326,22 +324,24 @@ function u()
     fi
 }
 
-# Source local settings file
-LOCAL_ZSHRC=$HOME/.local.zshrc
-[[ -f $LOCAL_ZSHRC ]] && source $LOCAL_ZSHRC
-
-# }}} End configuration added by Zim install
-
 export NVM_DIR="$HOME/.nvm"
 if [[ -s "$NVM_DIR/nvm.sh" ]]; then
     # Lazy-load nvm — defer sourcing until nvm/node/npm/npx is first used
     _nvm_load() {
         unfunction nvm node npm npx 2>/dev/null
         \. "$NVM_DIR/nvm.sh"
-        [[ -s "$NVM_DIR/bash_completion" ]] && \. "$NVM_DIR/bash_completion"
     }
     nvm()  { _nvm_load; nvm  "$@" }
     node() { _nvm_load; node "$@" }
     npm()  { _nvm_load; npm  "$@" }
     npx()  { _nvm_load; npx  "$@" }
 fi
+
+# Source local settings file
+LOCAL_ZSHRC=$HOME/.local.zshrc
+[[ -f $LOCAL_ZSHRC ]] && source $LOCAL_ZSHRC
+
+# Disable default list colors to avoid highlighting issues with bash completion
+zstyle ':completion:*' list-colors ''
+
+# }}} End configuration added by Zim install
