@@ -306,8 +306,18 @@ zstyle ':autocomplete:*' fzf-completion no
 # completions
 zstyle ':completion:*' special-dirs false
 zstyle ':completion:*:paths' path-completion yes
-zstyle ':completion:*:processes' command 'ps -afu $USER'
-zstyle ':completion:*' matcher-list 'm:{a-zäöüA-ZÄÖÜ-_}={A-ZÄÖÜa-zäöü_-} r:|=*' '+ r:|[._-]=* l:|=*'
+if [[ $OSTYPE == linux* ]]; then
+    zstyle ':completion:*:processes' command 'ps -u $USER -o pid,user,%cpu,tty,cputime,cmd'
+    zstyle ':completion:*:*:kill:*' command 'ps -u $USER -o pid,user,%cpu,tty,cputime,cmd'
+    zstyle ':completion:*:processes-names' command 'ps -u $USER -o comm='
+else
+    zstyle ':completion:*:processes' command 'ps aux -u $USER'
+    zstyle ':completion:*:*:kill:*' command 'ps aux -u $USER'
+    zstyle ':completion:*:processes-names' command 'ps xco command -u $USER'
+fi
+zstyle ':completion:*:*:kill:*' menu yes select
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
+zstyle ':completion:*:*:kill:*:processes' insert-ids single
 zstyle ':completion:*' matcher-list \
     'm:{a-zäöüA-ZÄÖÜ-_}={A-ZÄÖÜa-zäöü_-} r:|=*' \
     '+ r:|[._-]=* l:|=*' \
@@ -316,12 +326,11 @@ bindkey -M menuselect "^[m" accept-and-hold
 bindkey -M menuselect "$terminfo[kcbt]" reverse-menu-complete
 
 # Go to the root of the git repo
-function u()
-{
-    cd ./$(git rev-parse --show-cdup)
-    if  [  $#  =  1  ];  then
-        cd  $1
-    fi
+function u() {
+    local cdup
+    cdup=$(git rev-parse --show-cdup 2>/dev/null) || return 1
+    cd ./${cdup}
+    [[ $# == 1 ]] && cd $1
 }
 
 export NVM_DIR="$HOME/.nvm"
