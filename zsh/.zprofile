@@ -83,25 +83,36 @@ path=(
     $HOME/.fzf/bin
     $HOME/.autojump/bin
     $HOME/.cargo/bin
-    /usr/lib/llvm-3.6/bin
-    /opt/SEGGER/JLink
     /usr/local/{bin,sbin}
     /{bin,sbin}
     /usr/{bin,sbin}
-    $HOME/.local/share/gem/ruby/3.4.0/bin
-    $HOME/gems/bin
-    $HOME/go/bin
     $HOME/.local/share/nvim/mason/bin
     $path[@]
 )
 
-export GEM_HOME=$HOME/gems
+# Conditionally add tool-specific paths only if tools exist
+(( $+commands[ruby] )) && path+=($HOME/.local/share/gem/ruby/3.4.0/bin $HOME/gems/bin)
+(( $+commands[go] )) && path+=($HOME/go/bin)
+(( $+commands[llvm-config] )) && path+=(/usr/lib/llvm-3.6/bin)
+(( $+commands[JLinkExe] )) && path+=(/opt/SEGGER/JLink)
+
+# Lazy-load Perl environment only on first use
+_perl_load() {
+    unfunction perl_profile 2>/dev/null
+    export GEM_HOME=$HOME/gems
+    PATH="$HOME/perl5/bin${PATH:+:${PATH}}"; export PATH;
+    PERL5LIB="$HOME/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+    PERL_LOCAL_LIB_ROOT="$HOME/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+    PERL_MB_OPT="--install_base \"$HOME/perl5\""; export PERL_MB_OPT;
+    PERL_MM_OPT="INSTALL_BASE=$HOME/perl5"; export PERL_MM_OPT;
+}
+
+# Create a wrapper to load Perl config on first perl use
+if (( $+commands[perl] )); then
+    perl_profile() { _perl_load; perl_profile "$@" }
+fi
+
 export GOPATH=$HOME/go
-PATH="$HOME/perl5/bin${PATH:+:${PATH}}"; export PATH;
-PERL5LIB="$HOME/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
-PERL_LOCAL_LIB_ROOT="$HOME/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
-PERL_MB_OPT="--install_base \"$HOME/perl5\""; export PERL_MB_OPT;
-PERL_MM_OPT="INSTALL_BASE=$HOME/perl5"; export PERL_MM_OPT;
 
 #
 # Less
@@ -147,7 +158,7 @@ if (( $+commands[nvr] && $+commands[nvim] ));then
     export NVIM_LISTEN_ADDRESS=/tmp/nvimsocket
 fi
 
-# Load virtualenvwrapper into the shell session.
+# Load virtualenvwrapper into the shell session (async).
 if (( $+commands[virtualenvwrapper_lazy.sh] )); then
     export VIRTUALENV_USE_DISTRIBUTE=1
     export VIRTUALENV_DISTRIBUTE=1
@@ -171,7 +182,16 @@ if (( $+commands[virtualenvwrapper_lazy.sh] )); then
     # Don't create *.pyc files by default
     export PYTHONDONTWRITEBYTECODE=1
 
-    source "$commands[virtualenvwrapper_lazy.sh]"
+    # Lazy-load virtualenvwrapper on first use (defer initialization)
+    _virtualenv_load() {
+        unfunction workon mkvirtualenv rmvirtualenv lsvirtualenv cdvirtualenv 2>/dev/null
+        source "$commands[virtualenvwrapper_lazy.sh]"
+    }
+    workon() { _virtualenv_load; workon "$@" }
+    mkvirtualenv() { _virtualenv_load; mkvirtualenv "$@" }
+    rmvirtualenv() { _virtualenv_load; rmvirtualenv "$@" }
+    lsvirtualenv() { _virtualenv_load; lsvirtualenv "$@" }
+    cdvirtualenv() { _virtualenv_load; cdvirtualenv "$@" }
 fi
 
 # Initialize fzf - https://github.com/junegunn/fzf

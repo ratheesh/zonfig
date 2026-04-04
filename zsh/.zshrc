@@ -154,8 +154,10 @@ WORDCHARS=${WORDCHARS//[\/]}
 # Append `../` to your input for each `.` you type after an initial `..`
 zstyle ':zim:input' double-dot-expand yes
 
-# SSH key management
+# SSH key management (lazy-loaded)
+# Set IDs to lazy-load only on first SSH use
 zstyle ':zim:ssh' ids 'id_rsa1' 'id_rsa2' 'id_rsa3'
+zstyle ':zim:ssh' lazy yes
 
 #
 # termtitle
@@ -268,24 +270,27 @@ zle_highlight+=(paste:none)
 users=($USER rreddy "$users")
 zstyle ':completion:*' users $users
 
-# xilinx devel setup
-alias cgdb-xilinx='cgdb -d arm-xilinx-linux-gnueabi-gdb -- -quiet'
-export arm='ARCH=arm CROSS_COMPILE=arm-linux-gnueabi-'
-export xilinx='ARCH=arm CROSS_COMPILE=arm-xilinx-linux-gnueabi-'
+# Embedded development tools - lazy-load on first use
+_embedded_dev_load() {
+    unfunction cgdb-xilinx cgdb_fscl cgdb_logicpd cgdb_stm goarm 2>/dev/null
+    alias cgdb-xilinx='cgdb -d arm-xilinx-linux-gnueabi-gdb -- -quiet'
+    export arm='ARCH=arm CROSS_COMPILE=arm-linux-gnueabi-'
+    export xilinx='ARCH=arm CROSS_COMPILE=arm-xilinx-linux-gnueabi-'
+    alias cgdb_fscl='cgdb -d arm-linux-gnueabihf-gdb -- -quiet'
+    export fscl='ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-'
+    alias cgdb_logicpd='cgdb -d arm-none-linux-gnueabi-gdb -- -quiet'
+    export logicpd='ARCH=arm CROSS_COMPILE=arm-none-linux-gnueabi-'
+    alias cgdb_stm='cgdb -d arm-none-eabi-gdb -- -quiet'
+    export stm='ARCH=arm CROSS_COMPILE=arm-none-eabi-'
+    alias goarm='env CC=arm-linux-gnueabihf-gcc CXX=arm-linux-gnueabihf-g++ GOOS=linux GOARCH=arm GOARM=7 CGO_ENABLED=1 go'
+}
 
-# freescale devel settings
-alias cgdb_fscl='cgdb -d arm-linux-gnueabihf-gdb -- -quiet'
-export fscl='ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-'
-
-# freescale devel settings
-alias cgdb_logicpd='cgdb -d arm-none-linux-gnueabi-gdb -- -quiet'
-export logicpd='ARCH=arm CROSS_COMPILE=arm-none-linux-gnueabi-'
-
-# STM devel settings
-alias cgdb_stm='cgdb -d arm-none-eabi-gdb -- -quiet'
-export stm='ARCH=arm CROSS_COMPILE=arm-none-eabi-'
-
-alias goarm='env CC=arm-linux-gnueabihf-gcc CXX=arm-linux-gnueabihf-g++ GOOS=linux GOARCH=arm GOARM=7 CGO_ENABLED=1 go'
+# Lazy-load embedded dev tools on first use
+cgdb-xilinx() { _embedded_dev_load; cgdb-xilinx "$@" }
+cgdb_fscl() { _embedded_dev_load; cgdb_fscl "$@" }
+cgdb_logicpd() { _embedded_dev_load; cgdb_logicpd "$@" }
+cgdb_stm() { _embedded_dev_load; cgdb_stm "$@" }
+goarm() { _embedded_dev_load; goarm "$@" }
 
 alias vi=vim
 alias vim=nvim
