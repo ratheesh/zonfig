@@ -87,6 +87,7 @@ path=(
     /{bin,sbin}
     /usr/{bin,sbin}
     $HOME/.local/share/nvim/mason/bin
+    $HOME/.opencode/bin
     $path[@]
 )
 
