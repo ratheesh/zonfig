@@ -32,6 +32,9 @@ fi
 source ${ZIM_HOME}/init.zsh
 (( $+functions[autopair-init] )) && autopair-init
 
+# Restore fzf ^r binding — vi-mode module overrides it with history-incremental-search-backward
+(( $+functions[fzf-history-widget] )) && bindkey '^r' fzf-history-widget
+
 # -----------------
 # Zsh configuration
 # -----------------
