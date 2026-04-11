@@ -309,6 +309,7 @@ zstyle ':autocomplete:*' fzf-completion no
 # completions
 zstyle ':completion:*' special-dirs false
 zstyle ':completion:*:paths' path-completion yes
+zstyle ':completion:*:directories' sort no
 if [[ $OSTYPE == linux* ]]; then
     zstyle ':completion:*:processes' command 'ps -u $USER -o pid,user,%cpu,tty,cputime,cmd'
     zstyle ':completion:*:*:kill:*' command 'ps -u $USER -o pid,user,%cpu,tty,cputime,cmd'
@@ -322,9 +323,9 @@ zstyle ':completion:*:*:kill:*' menu yes select
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:*:kill:*:processes' insert-ids single
 zstyle ':completion:*' matcher-list \
+    'l:|=* r:|=*' \
     'm:{a-zäöüA-ZÄÖÜ-_}={A-ZÄÖÜa-zäöü_-} r:|=*' \
-    '+ r:|[._-]=* l:|=*' \
-    'l:|=* r:|=*'
+    '+ r:|[._-]=* l:|=*'
 bindkey -M menuselect "^[m" accept-and-hold
 bindkey -M menuselect "$terminfo[kcbt]" reverse-menu-complete
 
