@@ -162,22 +162,14 @@ fi
 # Load virtualenvwrapper into the shell session (async).
 if (( $+commands[virtualenvwrapper_lazy.sh] )); then
     export VIRTUALENV_USE_DISTRIBUTE=1
-    export VIRTUALENV_DISTRIBUTE=1
-    # Disable default virtualenv prompt.
     VIRTUAL_ENV_DISABLE_PROMPT=1
 
-    # Python virtualenvwrapper settings
-    # Set the directory where virtual environments are stored.
     export WORKON_HOME="$HOME/.virtualenvs"
     export VIRTUALENVWRAPPER_VIRTUALENV_ARGS=''
 
-    # Tell pip to respect virtualenv
-    export PIP_RESPECT_VIRTUALENV=true
-    export PIP_VIRTUALENV_BASE=$WORKON_HOME
-
     if [ "$VIRTUALENVWRAPPER_PYTHON" = "" ]
     then
-        VIRTUALENVWRAPPER_PYTHON="$(command \which python)"
+        VIRTUALENVWRAPPER_PYTHON="$(command which python)"
     fi
 
     # Don't create *.pyc files by default
