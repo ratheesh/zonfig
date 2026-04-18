@@ -275,7 +275,12 @@ if (( $+commands[zoxide] )) && [[ -o interactive ]]; then
     unset _zoxide_cache
 fi
 
-[[ -f "$HOME/.cargo/env" ]] && . $HOME/.cargo/env
+# Lazy-load cargo env on first use
+_cargo_load() {
+    unfunction cargo 2>/dev/null
+    . "$HOME/.cargo/env"
+}
+cargo() { _cargo_load; cargo "$@" }
 
 
 # colorize output of compatible standard utilities
