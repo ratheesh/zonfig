@@ -78,16 +78,17 @@ typeset -gU cdpath fpath mailpath path
 
 # Set the list of directories that Zsh searches for programs.
 path=(
+    $HOME/.local/share/nvim/mason/bin
     $HOME/bin
     $HOME/.local/bin
     $HOME/.fzf/bin
     $HOME/.autojump/bin
     $HOME/.cargo/bin
+    $HOME/.opencode/bin
+    $HOME/gems/bin/
     /usr/local/{bin,sbin}
     /{bin,sbin}
     /usr/{bin,sbin}
-    $HOME/.local/share/nvim/mason/bin
-    $HOME/.opencode/bin
     $path[@]
 )
 
