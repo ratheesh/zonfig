@@ -323,9 +323,13 @@ zstyle ':completion:*:*:kill:*' menu yes select
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:*:kill:*:processes' insert-ids single
 zstyle ':completion:*' matcher-list \
-    'l:|=* r:|=*' \
-    'm:{a-zäöüA-ZÄÖÜ-_}={A-ZÄÖÜa-zäöü_-} r:|=*' \
-    '+ r:|[._-]=* l:|=*'
+    'm:{a-zA-Z}={A-Za-z} r:|[-_]=* r:|=*' \
+    'r:|[.-]=* l:|=*' \
+    'l:|=* r:|=*'
+
+# Disable default list colors to avoid highlighting issues with bash completion
+zstyle ':completion:*' list-colors ''
+
 bindkey -M menuselect "^[m" accept-and-hold
 bindkey -M menuselect "$terminfo[kcbt]" reverse-menu-complete
 
@@ -353,8 +357,5 @@ fi
 # Source local settings file
 LOCAL_ZSHRC=$HOME/.local.zshrc
 [[ -f $LOCAL_ZSHRC ]] && source $LOCAL_ZSHRC
-
-# Disable default list colors to avoid highlighting issues with bash completion
-zstyle ':completion:*' list-colors ''
 
 # }}} End configuration added by Zim install
