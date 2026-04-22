@@ -255,6 +255,9 @@ bindkey -s '\eu' '^Ucd ..; ls^M'
 # Unbind Ctrl-g for fzf-git to get working
 bindkey -r "^g"
 
+# Unbind Ctrl-o for fzf-docker to get working
+bindkey -r "^o"
+
 # disable highlighting on paste
 zle_highlight+=(paste:none)
 
