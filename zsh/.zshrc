@@ -184,6 +184,10 @@ done
 bindkey -M vicmd "j" history-substring-search-down
 bindkey -M vicmd "k" history-substring-search-up
 
+# Advanced History options
+HIST_STAMPS="yyyy-mm-dd"
+zstyle ':completion:*' keep-prefix true
+zstyle ':history-append:*' preserve-days true
 
 #
 # zsh-autosuggestions
@@ -328,10 +332,35 @@ zstyle ':completion:*:*:kill:*:processes' insert-ids single
 zstyle ':completion:*' matcher-list \
     'm:{a-zA-Z}={A-Za-z} r:|[-_]=* r:|=*' \
     'r:|[.-]=* l:|=*' \
-    'l:|=* r:|=*'
+    'l:|=* r:|=*' \
+    'm:{a-z}={A-Z} r:| |=*' \
+    'r:|.=* l:|=*'
 
-# Disable default list colors to avoid highlighting issues with bash completion
-zstyle ':completion:*' list-colors ''
+# Advanced completion options
+# zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' '+r:| |=*' '+l:|=*'
+zstyle ':completion:*' menu select
+zstyle ':completion:*' original true
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path "$HOME/.cache/zsh/zcompcache"
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' group-order files directories aliases functions commands
+
+# Ignore case in completion
+zstyle ':completion:*' case-insensitive true
+
+# Enable matcher-continue for progressive matching
+zstyle ':completion:*:match:*' original only
+
+# Menu selection with arrow keys
+zstyle ':completion:*:history-words' menu yes
+
+# Use LS_COLORS for completion menu colors
+local -a list_colors
+for c in ${(s/:/)LS_COLORS}; do
+  list_colors+="${c%%=*}"*="${c#*=}"
+done
+zstyle ':completion:*' list-colors $list_colors
+zstyle ':completion:*:directories' list-colors $list_colors
 
 bindkey -M menuselect "^[m" accept-and-hold
 bindkey -M menuselect "$terminfo[kcbt]" reverse-menu-complete
