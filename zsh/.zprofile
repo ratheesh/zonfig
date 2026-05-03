@@ -1,4 +1,3 @@
-#ctest --preset linux-coverage-test
 # Executes commands at login pre-zshrc.
 #
 # Authors:
@@ -100,7 +99,7 @@ path=(
 
 # Lazy-load Perl environment only on first use
 _perl_load() {
-    unfunction perl_profile 2>/dev/null
+    unfunction perl 2>/dev/null
     export GEM_HOME=$HOME/gems
     PATH="$HOME/perl5/bin${PATH:+:${PATH}}"; export PATH;
     PERL5LIB="$HOME/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
@@ -111,7 +110,7 @@ _perl_load() {
 
 # Create a wrapper to load Perl config on first perl use
 if (( $+commands[perl] )); then
-    perl_profile() { _perl_load; perl_profile "$@" }
+    perl() { _perl_load; perl "$@" }
 fi
 
 export GOPATH=$HOME/go
@@ -191,34 +190,29 @@ fi
 # Initialize fzf - https://github.com/junegunn/fzf
 if [[ -x "$(command -v fzf)" ]]; then
     export FZF_DEFAULT_OPTS="--height 50% --tmux 60%,50%              \
-        --layout reverse --multi --min-height 20+ --border            \
+        --layout=reverse --multi --min-height 20+ --border=rounded    \
         --header-border horizontal                                    \
         --pointer='➤ ' --marker='•' --prompt='➜  '                    \
         --border-label-pos 1                                          \
-        --color 'label:blue'                                          \
         --preview-window 'hidden,right,50%' --preview-border line     \
-        --bind 'f2:toggle-preview'"
-
-	export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
-	  --info=inline-right                      \
-	  --ansi                                   \
-	  --layout=reverse                         \
-	  --border=rounded                         \
-	  --color=border:#283838                   \
-	  --color=fg:#c0c0c0                       \
-	  --color=header:#73918C                   \
-	  --color=bg+:#000000                      \
-	  --color=hl+:#ff007c:italic               \
-	  --color=hl:#2ac3de                       \
-	  --color=info:#545c7e                     \
-	  --color=marker:#ff007c                   \
-	  --color=pointer:#029456                  \
-	  --color=prompt:#D8226C                   \
-	  --color=query:#c0caf5:regular            \
-	  --color=scrollbar:#5f547d                \
-	  --color=separator:#6C8494                \
-	  --color=spinner:#ff007c                  \
-	"
+        --bind 'f2:toggle-preview'                                    \
+        --info=inline-right --ansi                                    \
+        --color 'label:blue'                                          \
+        --color=border:#283838                                        \
+        --color=fg:#c0c0c0                                            \
+        --color=header:#73918C                                        \
+        --color=bg+:#000000                                           \
+        --color=hl+:#ff007c:italic                                    \
+        --color=hl:#2ac3de                                            \
+        --color=info:#545c7e                                          \
+        --color=marker:#ff007c                                        \
+        --color=pointer:#029456                                       \
+        --color=prompt:#D8226C                                        \
+        --color=query:#c0caf5:regular                                 \
+        --color=scrollbar:#5f547d                                     \
+        --color=separator:#6C8494                                     \
+        --color=spinner:#ff007c                                       \
+    "
     export FZF_CTRL_R_OPTS="$FZF_DEFAULT_OPTS +m"
 fi
 
@@ -226,7 +220,7 @@ if (( $+commands[fd] ));then
     export FZF_DEFAULT_COMMAND='fd --type file --follow --hidden --color=never --exclude .git'
 
     _fzf_compgen_path() {
-        fd --hidden --follow --hidden --color=never --exclude ".git" . "$1"
+        fd --hidden --follow --color=never --exclude ".git" . "$1"
     }
 
    # Use fdfind to generate the list for directory completion
