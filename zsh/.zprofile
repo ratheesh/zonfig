@@ -85,6 +85,7 @@ path=(
     $HOME/.cargo/bin
     $HOME/.opencode/bin
     $HOME/gems/bin/
+    $HOME/node_modules/.bin
     /usr/local/{bin,sbin}
     /{bin,sbin}
     /usr/{bin,sbin}
