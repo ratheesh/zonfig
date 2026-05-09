@@ -265,6 +265,13 @@ bindkey -r "^o"
 # disable highlighting on paste
 zle_highlight+=(paste:none)
 
+# Keep syntax highlighting active during menu-select
+_my_menu_select() {
+  builtin zle .menu-select "$@"
+  _zsh_highlight
+}
+zle -N menu-select _my_menu_select
+
 # global alias expansion keys
 # bindkey '^ ' magic-space          # control-space to bypass completion
 
