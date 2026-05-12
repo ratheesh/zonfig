@@ -193,7 +193,7 @@ if [[ -x "$(command -v fzf)" ]]; then
     export FZF_DEFAULT_OPTS="--height 50% --tmux 60%,50%              \
         --layout=reverse --multi --min-height 20+ --border=rounded    \
         --header-border horizontal                                    \
-        --pointer='➤ ' --marker='•' --prompt='➜  '                    \
+        --pointer='⮞ ' --marker='•' --prompt='➜  '                    \
         --border-label-pos 1                                          \
         --preview-window 'hidden,right,50%' --preview-border line     \
         --bind 'f2:toggle-preview'                                    \
