@@ -49,8 +49,8 @@ zmodule duration-info
 zmodule ratheesh/zimfw-prompt
 
 # Additional completion definitions for Zsh.
-# zmodule zsh-users/zsh-completions --fpath src
-zmodule clarketm/zsh-completions --fpath src
+zmodule zsh-users/zsh-completions --fpath src
+# zmodule clarketm/zsh-completions --fpath src
 zmodule junegunn/fzf-git.sh --source fzf-git.sh
 # zmodule ethanrutt/fzf-docker.sh --source fzf-docker.sh
 zmodule docker/cli --fpath contrib/completion/zsh
