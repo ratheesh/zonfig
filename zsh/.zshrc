@@ -260,7 +260,9 @@ bindkey -s '\eu' '^Ucd ..; ls^M'
 bindkey -r "^g"
 
 # Unbind Ctrl-o for fzf-docker to get working
-bindkey -r "^o"
+# bindkey -r "^o"
+
+bindkey '^o' forward-word
 
 # disable highlighting on paste
 zle_highlight+=(paste:none)
