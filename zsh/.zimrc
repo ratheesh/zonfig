@@ -42,7 +42,7 @@ zmodule fzf
 # Prompt
 #
 # Exposes git repository status information to prompts
-# zmodule git-info
+zmodule git-info
 # zmodule asciiship
 zmodule mafredri/zsh-async --source async.zsh
 zmodule duration-info
