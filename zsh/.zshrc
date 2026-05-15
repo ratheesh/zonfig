@@ -374,6 +374,10 @@ zstyle ':completion:*:directories' list-colors $list_colors
 bindkey -M menuselect "^[m" accept-and-hold
 bindkey -M menuselect "$terminfo[kcbt]" reverse-menu-complete
 
+# Clear to end of display before completion list renders
+_comppre_clear() { echoti ed 2>/dev/null }
+compprefuncs+=(_comppre_clear)
+
 # Go to the root of the git repo
 function u() {
     local cdup
