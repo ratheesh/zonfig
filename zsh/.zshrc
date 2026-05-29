@@ -35,6 +35,29 @@ source ${ZIM_HOME}/init.zsh
 # Restore fzf ^r binding — vi-mode module overrides it with history-incremental-search-backward
 (( $+functions[fzf-history-widget] )) && bindkey '^r' fzf-history-widget
 
+# CTRL-T: use last partial word as fzf initial query, restore buffer on abort
+_fzf_ctrl_t_lastword() {
+    local query="" prefix="$LBUFFER" orig="$LBUFFER"
+
+    if [[ "${LBUFFER[-1]}" != " " ]]; then
+        local words=(${(z)LBUFFER})
+        if (( ${#words} > 1 )); then
+            local last="${words[-1]}"
+            prefix="${LBUFFER[1,-(${#last}+1)]}"
+            query="$last"
+        fi
+    fi
+
+    local saved_opts="$FZF_CTRL_T_OPTS"
+    LBUFFER="$prefix"
+    FZF_CTRL_T_OPTS="${FZF_CTRL_T_OPTS} --query=$query"
+    fzf-file-widget
+    FZF_CTRL_T_OPTS="$saved_opts"
+    [[ "$LBUFFER" == "$prefix" ]] && LBUFFER="$orig"
+}
+zle -N _fzf_ctrl_t_lastword
+(( $+functions[fzf-file-widget] )) && bindkey '^T' _fzf_ctrl_t_lastword
+
 # -----------------
 # Zsh configuration
 # -----------------
