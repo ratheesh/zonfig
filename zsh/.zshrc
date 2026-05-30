@@ -211,6 +211,8 @@ bindkey -M vicmd "k" history-substring-search-up
 HIST_STAMPS="yyyy-mm-dd"
 zstyle ':completion:*' keep-prefix true
 zstyle ':history-append:*' preserve-days true
+zstyle ':completion:*:*:docker:*' option-stacking yes
+zstyle ':completion:*:*:docker-*:*' option-stacking yes
 
 #
 # zsh-autosuggestions
@@ -407,6 +409,31 @@ function u() {
     cdup=$(git rev-parse --show-cdup 2>/dev/null) || return 1
     cd ./${cdup}
     [[ $# == 1 ]] && cd $1
+}
+
+# Copy file with a progress bar
+function cpp() {
+    if [[ -x "$(command -v rsync)" ]]; then
+        # rsync -avh --progress "${1}" "${2}"
+        rsync -ah --info=progress2 "${1}" "${2}"
+    else
+        set -e
+        strace -q -ewrite cp -- "${1}" "${2}" 2>&1 \
+            | awk '{
+                count += $NF
+                if (count % 10 == 0) {
+                    percent = count / total_size * 100
+                    printf "%3d%% [", percent
+                    for (i=0;i<=percent;i++)
+                        printf "="
+                        printf ">"
+                    for (i=percent;i<100;i++)
+                        printf " "
+                        printf "]\r"
+                }
+            }
+    END { print "" }' total_size=$(stat -c '%s' "${1}") count=0
+                fi
 }
 
 export NVM_DIR="$HOME/.nvm"
