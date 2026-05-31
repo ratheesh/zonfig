@@ -30,9 +30,6 @@ zmodule archive
 # Applies correct bindkeys for input events.
 zmodule input
 
-# Handle ssh keys
-zmodule ssh
-
 # fzf
 zmodule fzf
 
@@ -57,9 +54,9 @@ zmodule docker/cli --fpath contrib/completion/zsh
 
 # Enables and configures smart and extensive tab completion.
 # completion must be sourced after all modules that add completion definitions.
-zmodule z-shell/zsh-fancy-completions
 zmodule ratheesh/zimfw-customization --root input
 zmodule ratheesh/zimfw-customization --root completion
+# zsh-fancy-completions removed: compinit now owned by zimfw-customization/completion
 # zmodule completion
 
 # cycle background jobs

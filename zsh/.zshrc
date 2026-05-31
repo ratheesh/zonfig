@@ -35,6 +35,11 @@ source ${ZIM_HOME}/init.zsh
 # Restore fzf ^r binding — vi-mode module overrides it with history-incremental-search-backward
 (( $+functions[fzf-history-widget] )) && bindkey '^r' fzf-history-widget
 
+# edit command in $EDITOR — standard vi `v` in normal mode
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey -M vicmd 'v' edit-command-line
+
 # CTRL-T: use last partial word as fzf initial query, restore buffer on abort
 _fzf_ctrl_t_lastword() {
     local query="" prefix="$LBUFFER" orig="$LBUFFER"
@@ -67,27 +72,26 @@ complete() { unfunction complete compgen; bashcompinit; complete "$@" }
 compgen() { unfunction complete compgen; bashcompinit; compgen "$@" }
 
 # Some basic settings
-HISTSIZE=10000 # session history size
-SAVEHIST=10000 # saved history
-HISTFILE=$HOME/.zshistory # history file
+HISTSIZE=100000
+SAVEHIST=100000
+HISTFILE=$HOME/.zshistory
+REPORTTIME=10
+TIMEFMT='%J  %*E real  %*U user  %*S sys  %P cpu'
 ZLE_RPROMPT_INDENT=0
 
-setopt shwordsplit           # make sure that $arm works fine
+setopt shwordsplit           # word-split $arm/$xilinx/etc env vars for `$arm make` embedded dev usage
 setopt multibyte             # Support multibyte support
 setopt nobgnice              # run bg jobs at full speed
-setopt complete_in_word      # allow tab completion in the middle of a word
-setopt always_to_end         # Place cursor at end after completion
-setopt append_history        # append
-setopt extended_history      # append
+setopt append_history
+setopt extended_history
 setopt hist_ignore_all_dups  # no duplicate
 setopt hist_reduce_blanks    # trim blanks
 setopt hist_verify           # show before executing history commands
-setopt inc_append_history    # add commands as they are typed, dont wait until shell exit
-setopt share_history         # share hist between sessions
+setopt share_history         # share hist between sessions; implies inc_append_history
 setopt bang_hist             # !keyword
 setopt MULTIOS               # write to multiple files
 setopt auto_remove_slash     # self explicit
-setopt no_clobber            # clobber on redirect
+setopt no_clobber            # prevent redirect from overwriting existing files (use >| to force)
 setopt interactive_comments  # enable interactive comments
 setopt aliases               # enable aliases
 setopt auto_cd               # if command is a path, cd into it
@@ -110,7 +114,6 @@ unsetopt beep                # disable audible bell
 unsetopt hist_ignore_space   # ignore space prefixed commands
 unsetopt rm_star_silent      # ask for confirmation for `rm *' or `rm path/*'
 unsetopt hup                 # no hup signal at shell exit
-unsetopt flowcontrol	     # ctr-s/q has not effect now (Thanx!!!)
 unsetopt AUTO_NAME_DIRS
 
 # watch=all                  # watch all logins - enabling this will print annoying msgs on terminal
@@ -121,6 +124,10 @@ autoload -U run-help
 autoload run-help-git
 # unalias run-help
 alias help=run-help
+
+autoload -Uz zmv
+alias zmv='noglob zmv -W'
+autoload -Uz zargs
 
 # umask for new folders and files
 umask 022
@@ -146,7 +153,7 @@ else
 fi
 
 # If this is removed, cursor after prompt behave weirdly
-[[ $TMUX = "" ]] && export TERM="wezterm"
+[[ $TMUX == "" ]] && (( ${+terminfo[wezterm]} )) && export TERM="wezterm"
 
 
 #
@@ -174,13 +181,26 @@ WORDCHARS=${WORDCHARS//[\/]}
 # input
 #
 
-# Append `../` to your input for each `.` you type after an initial `..`
-zstyle ':zim:input' double-dot-expand yes
-
-# SSH key management (lazy-loaded)
-# Set IDs to lazy-load only on first SSH use
-zstyle ':zim:ssh' ids 'id_rsa1' 'id_rsa2' 'id_rsa3'
-zstyle ':zim:ssh' lazy yes
+# SSH agent setup — replaces zmodule ssh (which ignored 'lazy' and always ran 3× ssh-add)
+# _ssh_agent_init: synchronous but 1 subprocess max when agent already running
+# _ssh_load_keys: backgrounded so key-add never blocks the prompt
+_ssh_agent_init() {
+    local ssh_env="$HOME/.ssh-agent"
+    ssh-add -l &>/dev/null
+    (( $? == 2 )) || return
+    [[ -r "$ssh_env" ]] && source "$ssh_env" >/dev/null
+    ssh-add -l &>/dev/null
+    (( $? == 2 )) || return
+    (umask 066; ssh-agent >! "$ssh_env") && source "$ssh_env" >/dev/null
+}
+_ssh_load_keys() {
+    ssh-add -l &>/dev/null && return
+    typeset -a _keys=($HOME/.ssh/id_rsa*(N) $HOME/.ssh/id_ed25519*(N))
+    (( ${#_keys} )) && ssh-add "${_keys[@]}" 2>/dev/null
+}
+_ssh_agent_init
+_ssh_load_keys &!
+unfunction _ssh_agent_init _ssh_load_keys
 
 #
 # termtitle
@@ -233,6 +253,7 @@ ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 # Set what highlighters will be used.
 # See https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters.md
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
+ZSH_HIGHLIGHT_MAXLENGTH=512
 
 # Customize the main highlighter styles.
 # See https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters/main.md#how-to-tweak-it
@@ -335,6 +356,12 @@ if (( $+commands[nvr] && $+commands[nvim] ));then
     alias nvr='nvr -s --remote'
 fi
 
+alias mkdir='mkdir -pv'
+alias cp='cp -iv'
+alias mv='mv -iv'
+alias rm='rm -iv'
+alias rmdir='rmdir -v'
+
 # zsh-autocomplete settings
 zstyle ':autocomplete:*' min-input 1
 zstyle ':autocomplete:*' insert-ambiguous no
@@ -360,9 +387,6 @@ else
     zstyle ':completion:*:*:kill:*' command 'ps aux -u $USER'
     zstyle ':completion:*:processes-names' command 'ps xco command -u $USER'
 fi
-zstyle ':completion:*:*:kill:*' menu yes select
-zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
-zstyle ':completion:*:*:kill:*:processes' insert-ids single
 zstyle ':completion:*' matcher-list \
     'm:{a-zA-Z}={A-Za-z} r:|[-_]=* r:|=*' \
     'r:|[.-]=* l:|=*' \
@@ -389,7 +413,7 @@ zstyle ':completion:*:match:*' original only
 zstyle ':completion:*:history-words' menu yes
 
 # Use LS_COLORS for completion menu colors
-local -a list_colors
+typeset -a list_colors
 for c in ${(s/:/)LS_COLORS}; do
   list_colors+="${c%%=*}"*="${c#*=}"
 done
@@ -434,6 +458,16 @@ function cpp() {
             }
     END { print "" }' total_size=$(stat -c '%s' "${1}") count=0
                 fi
+}
+
+# mkdir -p then cd into it
+mkcd() { mkdir -p "$@" && cd "${@[-1]}" }
+
+# cd up N levels (default 1): up 3 → cd ../../..
+up() {
+    local d='' limit="${1:-1}"
+    for ((i=1; i<=limit; i++)); do d="../$d"; done
+    cd "${d:-.}" || return
 }
 
 export NVM_DIR="$HOME/.nvm"

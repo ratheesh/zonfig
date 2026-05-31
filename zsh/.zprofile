@@ -274,7 +274,7 @@ fi
 # Lazy-load cargo env on first use
 _cargo_load() {
     unfunction cargo 2>/dev/null
-    . "$HOME/.cargo/env"
+    [[ -f "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"
 }
 cargo() { _cargo_load; cargo "$@" }
 
