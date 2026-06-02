@@ -39,14 +39,15 @@ export ALTERNATE_EDITOR=""
 export MINICOM="-m -c on -w -z"	# start minicom in color
 
 if (( $+commands[bat] )); then
-	# export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+	export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+	export MANROFFOPT="-c"
 	export PAGER=less
 fi
 
 
 # misc
 export GCC_COLOR="auto"
-export COLORTERM="wezterm"
+export COLORTERM="truecolor"
 
 # disable soft flow control
 if [[ -t 0 ]]; then
@@ -81,7 +82,6 @@ path=(
     $HOME/bin
     $HOME/.local/bin
     $HOME/.fzf/bin
-    $HOME/.autojump/bin
     $HOME/.cargo/bin
     $HOME/.opencode/bin
     $HOME/gems/bin/
@@ -228,6 +228,9 @@ if (( $+commands[fd] ));then
    _fzf_compgen_dir() {
        fd --type d --hidden --follow --color=never --exclude ".git" . "$1"
    }
+ elif (( $+commands[rg] )); then
+    export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git"'
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
  elif (( $+commands[ag] )); then
     export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
@@ -271,6 +274,17 @@ if (( $+commands[zoxide] )) && [[ -o interactive ]]; then
     unset _zoxide_cache
 fi
 
+# atuin shell history init — SQLite-backed history with timestamps and exit codes
+if (( $+commands[atuin] )) && [[ -o interactive ]]; then
+    _atuin_cache="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/atuin-init.zsh"
+    if [[ ! -f $_atuin_cache || $commands[atuin] -nt $_atuin_cache ]]; then
+        mkdir -p "${_atuin_cache:h}"
+        atuin init zsh --disable-up-arrow >| $_atuin_cache
+    fi
+    source $_atuin_cache
+    unset _atuin_cache
+fi
+
 # Lazy-load cargo env on first use
 _cargo_load() {
     unfunction cargo 2>/dev/null
@@ -299,6 +313,9 @@ if (( $+commands[grc] )); then
     # alias ls='/usr/bin/grc -s --colour=auto ls'
     alias mount='/usr/bin/grc -s --colour=auto mount'
     alias gcc='/usr/bin/grc -s --colour=auto gcc'
+    alias make='/usr/bin/grc -s --colour=auto make'
+    alias cmake='/usr/bin/grc -s --colour=auto cmake'
+    alias ninja='/usr/bin/grc -s --colour=auto ninja'
     alias cal='/usr/bin/grc -s --colour=auto cal'
     alias ncal='/usr/bin/grc -s --colour=auto ncal -w'
 fi

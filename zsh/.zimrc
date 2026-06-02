@@ -33,7 +33,7 @@ zmodule input
 # fzf
 zmodule fzf
 
-# zmodule hlissner/zsh-autopair
+zmodule hlissner/zsh-autopair
 
 #
 # Prompt
@@ -59,8 +59,11 @@ zmodule ratheesh/zimfw-customization --root completion
 # zsh-fancy-completions removed: compinit now owned by zimfw-customization/completion
 # zmodule completion
 
+# alias reminder — reminds when a defined alias could have been used
+# zmodule MichaelAquilina/zsh-you-should-use
+
 # cycle background jobs
-# zmodule aemonge/zsh-cycle-jobs
+zmodule aemonge/zsh-cycle-jobs
 
 #
 # Modules that must be initialized last

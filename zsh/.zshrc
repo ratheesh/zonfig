@@ -38,7 +38,7 @@ source ${ZIM_HOME}/init.zsh
 # edit command in $EDITOR — standard vi `v` in normal mode
 autoload -Uz edit-command-line
 zle -N edit-command-line
-bindkey -M vicmd 'v' edit-command-line
+# bindkey -M vicmd 'v' edit-command-line
 
 # CTRL-T: use last partial word as fzf initial query, restore buffer on abort
 _fzf_ctrl_t_lastword() {
@@ -75,7 +75,7 @@ compgen() { unfunction complete compgen; bashcompinit; compgen "$@" }
 HISTSIZE=100000
 SAVEHIST=100000
 HISTFILE=$HOME/.zshistory
-REPORTTIME=10
+REPORTTIME=5
 TIMEFMT='%J  %*E real  %*U user  %*S sys  %P cpu'
 ZLE_RPROMPT_INDENT=0
 
@@ -279,7 +279,7 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#606060,italic"
 
 # bindkey "^M" accept-line
 ZSH_AUTOSUGGEST_USE_ASYNC=true
-ZSH_AUTOSUGGEST_STRATEGY=(history match_prev_cmd)
+ZSH_AUTOSUGGEST_STRATEGY=(history match_prev_cmd completion)
 for keymap in 'emacs' 'viins' 'vicmd'; do
     bindkey -M ${keymap} '^\n' autosuggest-execute
 done
@@ -325,7 +325,6 @@ zle -N menu-select _my_menu_select
 
 # Customize to your needs...
 # add custom users for auto completion
-users=($USER rreddy "$users")
 zstyle ':completion:*' users $users
 
 # Embedded development tools - lazy-load on first use
@@ -387,12 +386,21 @@ else
     zstyle ':completion:*:*:kill:*' command 'ps aux -u $USER'
     zstyle ':completion:*:processes-names' command 'ps xco command -u $USER'
 fi
+# Progressive "fuzzy" matching for every completion, git refs included
+# (e.g. `git checkout <substring><TAB>` matches a branch name anywhere in it,
+#  `git switch`, `git merge`, `git rebase`, tags, remotes, etc.).
+# zsh tries each level in order and stops at the first that yields matches:
+#   0  ''                          exact
+#   1  m:{a-zA-Z}={A-Za-z}         case-insensitive
+#   2  + r:|[._-]=* r:|=*          complete across [._-]/digit word boundaries
+#   3  l:|=* r:|=*                 substring match anywhere in the candidate
+# Typo tolerance comes from the _approximate completer (set in the
+# zimfw-customization/completion module).
 zstyle ':completion:*' matcher-list \
-    'm:{a-zA-Z}={A-Za-z} r:|[-_]=* r:|=*' \
-    'r:|[.-]=* l:|=*' \
-    'l:|=* r:|=*' \
-    'm:{a-z}={A-Z} r:| |=*' \
-    'r:|.=* l:|=*'
+    '' \
+    'm:{a-zA-Z}={A-Za-z}' \
+    'm:{a-zA-Z}={A-Za-z} r:|[._-]=* r:|=*' \
+    'l:|=* r:|=*'
 
 # Advanced completion options
 # zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' '+r:| |=*' '+l:|=*'
