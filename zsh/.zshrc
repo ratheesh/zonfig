@@ -35,6 +35,9 @@ source ${ZIM_HOME}/init.zsh
 # Restore fzf ^r binding — vi-mode module overrides it with history-incremental-search-backward
 (( $+functions[fzf-history-widget] )) && bindkey '^r' fzf-history-widget
 
+# Restore zsh-cycle-jobs binding — vi-mode (loaded after it) resets the viins keymap
+(( $+functions[_fzf_job_chooser] )) && bindkey "${FZF_JOB_KEYBIND:-^J}" _fzf_job_chooser
+
 # edit command in $EDITOR — standard vi `v` in normal mode
 autoload -Uz edit-command-line
 zle -N edit-command-line
