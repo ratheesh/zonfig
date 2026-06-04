@@ -238,18 +238,6 @@ zstyle ':completion:*:*:docker:*' option-stacking yes
 zstyle ':completion:*:*:docker-*:*' option-stacking yes
 
 #
-# zsh-autosuggestions
-#
-
-# Disable automatic widget re-binding on each precmd. This can be set when
-# zsh-users/zsh-autosuggestions is the last module in your ~/.zimrc.
-ZSH_AUTOSUGGEST_MANUAL_REBIND=1
-
-# Customize the style that the suggestions are shown with.
-# See https://github.com/zsh-users/zsh-autosuggestions/blob/master/README.md#suggestion-highlight-style
-#ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=242'
-
-#
 # zsh-syntax-highlighting
 #
 
@@ -268,26 +256,33 @@ ZSH_HIGHLIGHT_STYLES[comment]='fg=242'
 # Post-init module configuration
 # ------------------------------
 
-# zsh auto-suggestions module
-for keymap in 'emacs' 'viins' 'vicmd'; do
-#     bindkey -M ${keymap} '^ ' my-autosuggest-accept
-    bindkey -M ${keymap} '^ ' autosuggest-accept
-done
-
-for keymap in  'emacs' 'viins' 'vicmd'; do
-   bindkey -M ${keymap} '^o' vi-forward-word
-done
-
+# zsh-autosuggestions module
+#
+# Disable automatic widget re-binding on each precmd (perf). Safe here: every
+# module is loaded by init.zsh before the first precmd wraps widgets.
+ZSH_AUTOSUGGEST_MANUAL_REBIND=1
+# Fetch suggestions asynchronously so a slow `completion` lookup never blocks typing.
+ZSH_AUTOSUGGEST_USE_ASYNC=true
+# Suggestion sources, tried in order. match_prev_cmd is intentionally omitted: it
+# needs ordered, un-deduped history and is broken by `setopt hist_ignore_all_dups`.
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+# Stop fetching suggestions once the line grows past N chars. Uncomment if pasting
+# large blocks ever feels laggy; keep it generous so normal commands still get hints.
+# ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=80
+# Dim, italic suggestion text.
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#606060,italic"
 
-# bindkey "^M" accept-line
-ZSH_AUTOSUGGEST_USE_ASYNC=true
-ZSH_AUTOSUGGEST_STRATEGY=(history match_prev_cmd completion)
-for keymap in 'emacs' 'viins' 'vicmd'; do
-    bindkey -M ${keymap} '^\n' autosuggest-execute
-done
+# Clear the suggestion on history-substring-search so no stale hint lingers.
 ZSH_AUTOSUGGEST_CLEAR_WIDGETS=("${(@)ZSH_AUTOSUGGEST_CLEAR_WIDGETS:#(up|down)-line-or-history}")
 ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(history-substring-search-up history-substring-search-down)
+
+# Keybindings: ^Space accepts the suggestion, ^Enter accepts and runs it,
+# ^o accepts one word (vi-forward-word is a default partial-accept widget).
+for keymap in 'emacs' 'viins' 'vicmd'; do
+    bindkey -M ${keymap} '^ '  autosuggest-accept
+    bindkey -M ${keymap} '^\n' autosuggest-execute
+    bindkey -M ${keymap} '^o'  vi-forward-word
+done
 
 # Enable multiselection of items
 zmodload zsh/complist
