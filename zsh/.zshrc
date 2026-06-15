@@ -359,6 +359,16 @@ alias mv='mv -iv'
 alias rm='rm -iv'
 alias rmdir='rmdir -v'
 
+# eza settings
+if (( $+commands[eza] )); then
+    _eza() { LS_COLORS='' command eza --icons=always --group-directories-first "$@" }
+    alias ls='_eza --git'
+    alias l='_eza -1'
+    alias ll='_eza -lh --git'
+    alias la='_eza -lah --git'
+    alias tree='_eza --tree'
+fi
+
 # zsh-autocomplete settings
 zstyle ':autocomplete:*' min-input 1
 zstyle ':autocomplete:*' insert-ambiguous no
