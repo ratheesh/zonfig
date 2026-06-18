@@ -233,7 +233,7 @@ if (( $+commands[fd] ));then
    _fzf_compgen_dir() {
        fd --type d --hidden --follow --color=never --exclude ".git" . "$1"
    }
- elif (( $+commands[rg] )); then
+  elif (( $+commands[rg] )); then
     export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git"'
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
  elif (( $+commands[ag] )); then
@@ -310,8 +310,11 @@ export LSCOLORS='ExFxBxDxCxegedabagacad'
 export EZA_COLORS='hd=38;2;198;208;245:bu=1;38;2;229;200;144'
 
 
-# colorize output of compatible standard utilities
-if (( $+commands[grc] )); then
+# Rusty Generic Colouriser (rgrc) — fast Rust-based colouriser, higher priority
+if (( $+commands[rgrc] )); then
+    eval "$(rgrc --all-aliases)"
+# Generic Colouriser (grc) — fallback if rgrc not available
+elif (( $+commands[grc] )); then
     alias ping='/usr/bin/grc -s --colour=auto ping'
     alias df='/usr/bin/grc -s --colour=auto df -kh'
     alias ifconfig='/usr/bin/grc -s --colour=auto ifconfig'
