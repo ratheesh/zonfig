@@ -199,20 +199,20 @@ if [[ -x "$(command -v fzf)" ]]; then
         --bind 'f2:toggle-preview'                                    \
         --info=inline-right --ansi                                    \
         --color 'label:blue'                                          \
-        --color=border:#283838                                        \
+        --color=border:#2B535C                                        \
         --color=fg:#c0c0c0                                            \
         --color=header:#73918C                                        \
         --color=bg+:#000000                                           \
-        --color=hl+:#ff007c:italic                                    \
-        --color=hl:#2ac3de                                            \
+        --color=hl+:#cf007c:italic                                    \
+        --color=hl:#2ac3ce                                            \
         --color=info:#545c7e                                          \
-        --color=marker:#ff007c                                        \
+        --color=marker:#cf007c                                        \
         --color=pointer:#029456                                       \
         --color=prompt:#D8226C                                        \
         --color=query:#c0caf5:regular                                 \
         --color=scrollbar:#5f547d                                     \
-        --color=separator:#6C8494                                     \
-        --color=spinner:#ff007c                                       \
+        --color=separator:#715E69                                     \
+        --color=spinner:#cf007c                                       \
     "
     export FZF_CTRL_R_OPTS="$FZF_DEFAULT_OPTS +m"
 
