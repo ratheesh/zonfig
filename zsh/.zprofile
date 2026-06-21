@@ -10,7 +10,7 @@
 #
 
 if [[ "$OSTYPE" == darwin* ]]; then
-    export BROWSER='open'
+    export BROWSER="open"
 fi
 
 #
@@ -18,20 +18,20 @@ fi
 #
 
 if (( $+commands[nvim] )); then
-    export EDITOR=nvim
-    export VISUAL=nvim
-    export SUDO_EDITOR=nvim
-    export GIT_EDITOR=nvim
+    export EDITOR="nvim"
+    export VISUAL="nvim"
+    export SUDO_EDITOR="nvim"
+    export GIT_EDITOR="nvim"
 elif (( $+commands[vim] ));then
-    export VISUAL='vim'
-    export EDITOR='vim'
-    export SUDO_EDITOR='vim'
-    export GIT_EDITOR='vim'
+    export VISUAL="vim"
+    export EDITOR="vim"
+    export SUDO_EDITOR="vim"
+    export GIT_EDITOR="vim"
 else
-    export VISUAL='nano'
-    export EDITOR='nano'
-    export SUDO_EDITOR='nano'
-    export GIT_EDITOR='nano'
+    export VISUAL="nano"
+    export EDITOR="nano"
+    export SUDO_EDITOR="nano"
+    export GIT_EDITOR="nano"
 fi
 
 export ALTERNATE_EDITOR=""
@@ -41,7 +41,7 @@ export MINICOM="-m -c on -w -z"	# start minicom in color
 if (( $+commands[bat] )); then
 	export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 	export MANROFFOPT="-c"
-	export PAGER=less
+	export PAGER="less"
 fi
 
 
