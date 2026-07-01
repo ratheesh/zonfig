@@ -32,8 +32,7 @@ fi
 source ${ZIM_HOME}/init.zsh
 (( $+functions[autopair-init] )) && autopair-init
 
-# Restore fzf ^r binding — vi-mode module overrides it with history-incremental-search-backward
-(( $+functions[fzf-history-widget] )) && bindkey '^r' fzf-history-widget
+# ^r is handled by atuin (see .zprofile) — do not restore fzf here
 
 # Restore zsh-cycle-jobs binding — vi-mode (loaded after it) resets the viins keymap
 (( $+functions[_fzf_job_chooser] )) && bindkey "${FZF_JOB_KEYBIND:-^J}" _fzf_job_chooser
@@ -504,3 +503,7 @@ LOCAL_ZSHRC=$HOME/.local.zshrc
 [[ -f $LOCAL_ZSHRC ]] && source $LOCAL_ZSHRC
 
 # }}} End configuration added by Zim install
+
+. "$HOME/.atuin/bin/env"
+
+eval "$(atuin init zsh)"

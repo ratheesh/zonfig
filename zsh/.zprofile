@@ -286,7 +286,9 @@ if (( $+commands[atuin] )) && [[ -o interactive ]]; then
         mkdir -p "${_atuin_cache:h}"
         atuin init zsh --disable-up-arrow >| $_atuin_cache
     fi
+    export ATUIN_DISABLE_UP_ARROW=1
     source $_atuin_cache
+    bindkey '^r' atuin-up-search-viins
     unset _atuin_cache
 fi
 
