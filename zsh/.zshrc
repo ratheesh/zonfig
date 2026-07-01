@@ -393,6 +393,31 @@ else
     zstyle ':completion:*:*:kill:*' command 'ps aux -u $USER'
     zstyle ':completion:*:processes-names' command 'ps xco command -u $USER'
 fi
+# getent compatibility for macOS — translates Linux getent calls to dscl equivalents
+if [[ ${ZONFIG_OS:-linux} != linux ]] && ! (( $+commands[getent] )); then
+  getent() {
+    case $1 in
+      passwd) dscl . -read /Users/"$2" 2>/dev/null | awk -F': ' '
+                /^RecordName:/       {n=$2}
+                /^UniqueID:/         {u=$2}
+                /^PrimaryGroupID:/   {g=$2}
+                /^NFSHomeDirectory:/ {h=$2}
+                /^UserShell:/        {s=$2}
+                END {print n":*:"u":"g":"n":/Users/"n":"h":"s}'
+              ;;
+      group)  dscl . -read /Groups/"$2" 2>/dev/null | awk -F': ' '
+                /^RecordName:/       {n=$2}
+                /^PrimaryGroupID:/   {g=$2}
+                /^GroupMembership:/  {m=$2}
+                END {print n":*:"g":"m}'
+              ;;
+      hosts)  dscacheutil -q host -a name "$2" 2>/dev/null | awk '/ip_address/{print $2;exit}' ;;
+      services) dscacheutil -q service -a name "$2" 2>/dev/null ;;
+      ethers|netgroup|networks|protocols|rpc) return 0 ;;
+      *)      echo "getent: $1: unsupported on macOS" >&2; return 1 ;;
+    esac
+  }
+fi
 # Progressive "fuzzy" matching for every completion, git refs included
 # (e.g. `git checkout <substring><TAB>` matches a branch name anywhere in it,
 #  `git switch`, `git merge`, `git rebase`, tags, remotes, etc.).
