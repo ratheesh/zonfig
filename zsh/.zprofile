@@ -6,11 +6,25 @@
 #
 
 #
+# Platform detection
+#
+
+case "$OSTYPE" in
+    darwin*)  export ZONFIG_OS="macos"  ;;
+    linux*)   export ZONFIG_OS="linux"  ;;
+    *)        export ZONFIG_OS="other"  ;;
+esac
+
+#
 # Browser
 #
 
-if [[ "$OSTYPE" == darwin* ]]; then
+if [[ "$ZONFIG_OS" == macos ]]; then
     export BROWSER="open"
+elif (( $+commands[xdg-open] )); then
+    export BROWSER="xdg-open"
+elif (( $+commands[gio] )); then
+    export BROWSER="gio open"
 fi
 
 #
@@ -86,6 +100,9 @@ path=(
     $HOME/.opencode/bin
     $HOME/gems/bin/
     $HOME/node_modules/.bin
+    /opt/homebrew/{bin,sbin}
+    /opt/homebrew/usr/{bin,sbin}
+    /opt/homebrew/usr/local/{bin,sbin}
     /usr/local/{bin,sbin}
     /{bin,sbin}
     /usr/{bin,sbin}

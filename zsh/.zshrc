@@ -384,7 +384,7 @@ zstyle ':autocomplete:*' fzf-completion no
 zstyle ':completion:*' special-dirs false
 zstyle ':completion:*:paths' path-completion yes
 zstyle ':completion:*:directories' sort no
-if [[ $OSTYPE == linux* ]]; then
+if [[ ${ZONFIG_OS:-linux} == linux ]]; then
     zstyle ':completion:*:processes' command 'ps -u $USER -o pid,user,%cpu,tty,cputime,cmd'
     zstyle ':completion:*:*:kill:*' command 'ps -u $USER -o pid,user,%cpu,tty,cputime,cmd'
     zstyle ':completion:*:processes-names' command 'ps -u $USER -o comm='
