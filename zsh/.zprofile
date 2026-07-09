@@ -240,7 +240,9 @@ if [[ -x "$(command -v fzf)" ]]; then
 fi
 
 if (( $+commands[fd] ));then
-    export FZF_DEFAULT_COMMAND='fd --type file --follow --hidden --color=never --exclude .git'
+    export FZF_DEFAULT_COMMAND='fd --type file --follow --hidden --strip-cwd-prefix --color=never --exclude .git'
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+    export FZF_ALT_C_COMMAND='fd --type d --follow --hidden --strip-cwd-prefix --color=never --exclude .git'
 
     _fzf_compgen_path() {
         fd --hidden --follow --color=never --exclude ".git" . "$1"
