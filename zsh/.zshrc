@@ -265,9 +265,9 @@ ZSH_AUTOSUGGEST_USE_ASYNC=true
 # Suggestion sources, tried in order. match_prev_cmd is intentionally omitted: it
 # needs ordered, un-deduped history and is broken by `setopt hist_ignore_all_dups`.
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
-# Stop fetching suggestions once the line grows past N chars. Uncomment if pasting
-# large blocks ever feels laggy; keep it generous so normal commands still get hints.
-# ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=80
+# Stop fetching suggestions once the line grows past N chars. 512 keeps it generous
+# so normal commands still get hints, but avoids async work on huge pastes.
+ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=512
 # Dim, italic suggestion text.
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#606060,italic"
 
