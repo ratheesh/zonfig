@@ -74,8 +74,8 @@ complete() { unfunction complete compgen; bashcompinit; complete "$@" }
 compgen() { unfunction complete compgen; bashcompinit; compgen "$@" }
 
 # Some basic settings
-HISTSIZE=100000
-SAVEHIST=100000
+HISTSIZE=50000
+SAVEHIST=50000
 HISTFILE=$HOME/.zshistory
 REPORTTIME=5
 TIMEFMT='%J  %*E real  %*U user  %*S sys  %P cpu'
