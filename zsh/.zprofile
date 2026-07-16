@@ -178,25 +178,38 @@ if (( $+commands[nvr] && $+commands[nvim] ));then
 fi
 
 # Load virtualenvwrapper into the shell session (async).
-if (( $+commands[virtualenvwrapper_lazy.sh] )); then
-    export VIRTUALENV_USE_DISTRIBUTE=1
-    VIRTUAL_ENV_DISABLE_PROMPT=1
+# On macOS, pip installs scripts to ~/Library/Python/*/bin — add it to PATH
+if [[ "$ZONFIG_OS" == macos ]]; then
+    path+=($HOME/Library/Python/*/bin(N))
+fi
 
+# Locate virtualenvwrapper_lazy.sh — check PATH first, then common pip locations
+if (( $+commands[virtualenvwrapper_lazy.sh] )); then
+    _virtualenvwrapper_script="$commands[virtualenvwrapper_lazy.sh]"
+elif [[ -f "$HOME/.local/bin/virtualenvwrapper_lazy.sh" ]]; then
+    _virtualenvwrapper_script="$HOME/.local/bin/virtualenvwrapper_lazy.sh"
+elif [[ -f "$HOME/Library/Python/3.13/bin/virtualenvwrapper_lazy.sh" ]]; then
+    _virtualenvwrapper_script="$HOME/Library/Python/3.13/bin/virtualenvwrapper_lazy.sh"
+fi
+
+if [[ -n "$_virtualenvwrapper_script" ]]; then
+    export VIRTUAL_ENV_DISABLE_PROMPT=1
     export WORKON_HOME="$HOME/.virtualenvs"
     export VIRTUALENVWRAPPER_VIRTUALENV_ARGS=''
 
-    if [ "$VIRTUALENVWRAPPER_PYTHON" = "" ]
-    then
-        VIRTUALENVWRAPPER_PYTHON="$(command which python)"
+    if [[ -z "$VIRTUALENVWRAPPER_PYTHON" ]]; then
+        if (( $+commands[python3] )); then
+            VIRTUALENVWRAPPER_PYTHON="$(command which python3)"
+        elif (( $+commands[python] )); then
+            VIRTUALENVWRAPPER_PYTHON="$(command which python)"
+        fi
     fi
 
-    # Don't create *.pyc files by default
     export PYTHONDONTWRITEBYTECODE=1
 
-    # Lazy-load virtualenvwrapper on first use (defer initialization)
     _virtualenv_load() {
         unfunction workon mkvirtualenv rmvirtualenv lsvirtualenv cdvirtualenv 2>/dev/null
-        source "$commands[virtualenvwrapper_lazy.sh]"
+        source "$_virtualenvwrapper_script"
     }
     workon() { _virtualenv_load; workon "$@" }
     mkvirtualenv() { _virtualenv_load; mkvirtualenv "$@" }
