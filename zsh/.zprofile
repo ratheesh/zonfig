@@ -199,9 +199,9 @@ if [[ -n "$_virtualenvwrapper_script" ]]; then
 
     if [[ -z "$VIRTUALENVWRAPPER_PYTHON" ]]; then
         if (( $+commands[python3] )); then
-            VIRTUALENVWRAPPER_PYTHON="$(command which python3)"
+            VIRTUALENVWRAPPER_PYTHON="$commands[python3]"
         elif (( $+commands[python] )); then
-            VIRTUALENVWRAPPER_PYTHON="$(command which python)"
+            VIRTUALENVWRAPPER_PYTHON="$commands[python]"
         fi
     fi
 
@@ -309,19 +309,6 @@ if (( $+commands[zoxide] )) && [[ -o interactive ]]; then
     fi
     source $_zoxide_cache
     unset _zoxide_cache
-fi
-
-# atuin shell history init — SQLite-backed history with timestamps and exit codes
-if (( $+commands[atuin] )) && [[ -o interactive ]]; then
-    _atuin_cache="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/atuin-init.zsh"
-    if [[ ! -f $_atuin_cache || $commands[atuin] -nt $_atuin_cache ]]; then
-        mkdir -p "${_atuin_cache:h}"
-        atuin init zsh --disable-up-arrow >| $_atuin_cache
-    fi
-    export ATUIN_DISABLE_UP_ARROW=1
-    source $_atuin_cache
-    bindkey '^r' atuin-up-search-viins
-    unset _atuin_cache
 fi
 
 # Lazy-load cargo env on first use

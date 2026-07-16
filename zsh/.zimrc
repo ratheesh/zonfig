@@ -19,8 +19,7 @@ zmodule environment
 # Provides handy git aliases and functions.
 zmodule git
 
-# load ssh keys
-zmodule ssh
+# SSH agent handled by custom lazy code in .zshrc (avoids zim module's eager init)
 
 # Sets a custom terminal title.
 # zmodule termtitle

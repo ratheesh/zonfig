@@ -32,8 +32,6 @@ fi
 source ${ZIM_HOME}/init.zsh
 (( $+functions[autopair-init] )) && autopair-init
 
-# ^r is handled by atuin (see .zprofile) — do not restore fzf here
-
 # Restore zsh-cycle-jobs binding — vi-mode (loaded after it) resets the viins keymap
 (( $+functions[_fzf_job_chooser] )) && bindkey "${FZF_JOB_KEYBIND:-^J}" _fzf_job_chooser
 
@@ -184,26 +182,18 @@ WORDCHARS=${WORDCHARS//[\/]}
 # input
 #
 
-# SSH agent setup — replaces zmodule ssh (which ignored 'lazy' and always ran 3× ssh-add)
-# _ssh_agent_init: synchronous but 1 subprocess max when agent already running
-# _ssh_load_keys: backgrounded so key-add never blocks the prompt
-_ssh_agent_init() {
+# SSH agent — fully async to avoid blocking prompt (esp. on macOS where ssh-add
+# hits the Keychain, adding 50-200ms per call).
+_ssh_setup() {
     local ssh_env="$HOME/.ssh-agent"
-    ssh-add -l &>/dev/null
-    (( $? == 2 )) || return
-    [[ -r "$ssh_env" ]] && source "$ssh_env" >/dev/null
-    ssh-add -l &>/dev/null
-    (( $? == 2 )) || return
-    (umask 066; ssh-agent >! "$ssh_env") && source "$ssh_env" >/dev/null
-}
-_ssh_load_keys() {
     ssh-add -l &>/dev/null && return
+    [[ -r "$ssh_env" ]] && source "$ssh_env" >/dev/null
+    ssh-add -l &>/dev/null && return
+    (umask 066; ssh-agent >! "$ssh_env") && source "$ssh_env" >/dev/null
     typeset -a _keys=($HOME/.ssh/id_rsa*(N) $HOME/.ssh/id_ed25519*(N))
     (( ${#_keys} )) && ssh-add "${_keys[@]}" 2>/dev/null
 }
-_ssh_agent_init
-_ssh_load_keys &!
-unfunction _ssh_agent_init _ssh_load_keys
+_ssh_setup &!
 
 #
 # termtitle
@@ -479,26 +469,20 @@ function u() {
 # Copy file with a progress bar
 function cpp() {
     if [[ -x "$(command -v rsync)" ]]; then
-        # rsync -avh --progress "${1}" "${2}"
         rsync -ah --info=progress2 "${1}" "${2}"
-    else
-        set -e
+    elif [[ "$ZONFIG_OS" == macos ]] && [[ -x "$(command -v dtruss)" ]]; then
+        local size
+        size=$(stat -f '%z' "${1}" 2>/dev/null) || size=0
+        dtruss -q -t write cp -- "${1}" "${2}" 2>&1 \
+            | awk '{count += $NF; if (count % 10 == 0) { percent = count / size * 100; printf "%3d%% ["; for (i=0;i<=percent;i++) printf "="; printf ">"; for (i=percent;i<100;i++) printf " "; printf "]\r" } } END { print "" }' size=$size count=0
+    elif [[ -x "$(command -v strace)" ]]; then
+        local size
+        size=$(stat -c '%s' "${1}" 2>/dev/null) || size=0
         strace -q -ewrite cp -- "${1}" "${2}" 2>&1 \
-            | awk '{
-                count += $NF
-                if (count % 10 == 0) {
-                    percent = count / total_size * 100
-                    printf "%3d%% [", percent
-                    for (i=0;i<=percent;i++)
-                        printf "="
-                        printf ">"
-                    for (i=percent;i<100;i++)
-                        printf " "
-                        printf "]\r"
-                }
-            }
-    END { print "" }' total_size=$(stat -c '%s' "${1}") count=0
-                fi
+            | awk '{count += $NF; if (count % 10 == 0) { percent = count / size * 100; printf "%3d%% ["; for (i=0;i<=percent;i++) printf "="; printf ">"; for (i=percent;i<100;i++) printf " "; printf "]\r" } } END { print "" }' size=$size count=0
+    else
+        cp -v "${1}" "${2}"
+    fi
 }
 
 # mkdir -p then cd into it
@@ -524,12 +508,21 @@ if [[ -s "$NVM_DIR/nvm.sh" ]]; then
     npx()  { _nvm_load; npx  "$@" }
 fi
 
+# atuin shell history init — cached init after all modules loaded so keybindings stick
+if (( $+commands[atuin] )); then
+    _atuin_cache="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/atuin-init.zsh"
+    if [[ ! -f $_atuin_cache || $commands[atuin] -nt $_atuin_cache ]]; then
+        mkdir -p "${_atuin_cache:h}"
+        atuin init zsh --disable-up-arrow >| $_atuin_cache
+    fi
+    export ATUIN_DISABLE_UP_ARROW=1
+    source $_atuin_cache
+    bindkey '^r' atuin-up-search-viins
+    unset _atuin_cache
+fi
+
 # Source local settings file
 LOCAL_ZSHRC=$HOME/.local.zshrc
 [[ -f $LOCAL_ZSHRC ]] && source $LOCAL_ZSHRC
 
 # }}} End configuration added by Zim install
-
-. "$HOME/.atuin/bin/env"
-
-eval "$(atuin init zsh)"
