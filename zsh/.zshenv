@@ -11,6 +11,16 @@ typeset -U path
 
 skip_global_compinit=1
 
+#
+# Platform detection
+#
+
+case "$OSTYPE" in
+    darwin*)  export ZONFIG_OS="macos"  ;;
+    linux*)   export ZONFIG_OS="linux"  ;;
+    *)        export ZONFIG_OS="other"  ;;
+esac
+
 # Ensure that a non-login, non-interactive shell has a defined environment.
 if [[ "$SHLVL" -eq 1 && ! -o LOGIN && ! -o INTERACTIVE && -s "${ZDOTDIR:-$HOME}/.zprofile" ]]; then
     # echo "🙤 non-login shell🙦"

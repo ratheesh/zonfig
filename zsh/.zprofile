@@ -6,16 +6,6 @@
 #
 
 #
-# Platform detection
-#
-
-case "$OSTYPE" in
-    darwin*)  export ZONFIG_OS="macos"  ;;
-    linux*)   export ZONFIG_OS="linux"  ;;
-    *)        export ZONFIG_OS="other"  ;;
-esac
-
-#
 # Browser
 #
 
