@@ -32,6 +32,12 @@ fi
 source ${ZIM_HOME}/init.zsh
 (( $+functions[autopair-init] )) && autopair-init
 
+# Re-bind autopair delete widgets — vi-mode module (loaded during init.zsh) resets
+# keymaps and overrides ^w with backward-kill-word, ^h with backward-delete-char, etc.
+bindkey '^w' autopair-delete-word
+bindkey '^h' autopair-delete
+bindkey '^?' autopair-delete
+
 # Restore zsh-cycle-jobs binding — vi-mode (loaded after it) resets the viins keymap
 (( $+functions[_fzf_job_chooser] )) && bindkey "${FZF_JOB_KEYBIND:-^J}" _fzf_job_chooser
 
@@ -165,7 +171,7 @@ fi
 SPROMPT='zsh: correct %F{red}%R%f to %F{green}%r%f [nyae]? '
 
 # Remove path separator from WORDCHARS.
-WORDCHARS=${WORDCHARS//[\/]}
+WORDCHARS=${WORDCHARS//[\/_-]}
 
 # --------------------
 # Module configuration
