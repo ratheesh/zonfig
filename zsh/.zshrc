@@ -516,15 +516,7 @@ fi
 
 # atuin shell history init — cached init after all modules loaded so keybindings stick
 if (( $+commands[atuin] )); then
-    _atuin_cache="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/atuin-init.zsh"
-    if [[ ! -f $_atuin_cache || $commands[atuin] -nt $_atuin_cache ]]; then
-        mkdir -p "${_atuin_cache:h}"
-        atuin init zsh --disable-up-arrow >| $_atuin_cache
-    fi
-    export ATUIN_DISABLE_UP_ARROW=1
-    source $_atuin_cache
-    bindkey '^r' atuin-up-search-viins
-    unset _atuin_cache
+    eval "$(atuin init zsh --disable-up-arrow)"
 fi
 
 # Source local settings file

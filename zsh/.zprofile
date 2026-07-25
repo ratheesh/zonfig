@@ -82,6 +82,7 @@ typeset -gU cdpath fpath mailpath path
 
 # Set the list of directories that Zsh searches for programs.
 path=(
+    $HOME/.atuin/bin
     $HOME/.local/share/nvim/mason/bin
     $HOME/bin
     $HOME/.local/bin
