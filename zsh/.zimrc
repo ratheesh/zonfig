@@ -90,5 +90,8 @@ zmodule fdellwing/zsh-bat
 # zmodule antznin/zsh-bitbake
 zmodule ajeetdsouza/zoxide
 
+# undo actions for zsh
+zmodule nvrmnd-png/undo
+
 # }}} End configuration added by Zim install
 
