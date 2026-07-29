@@ -41,10 +41,8 @@ bindkey '^?' autopair-delete
 # Restore zsh-cycle-jobs binding — vi-mode (loaded after it) resets the viins keymap
 (( $+functions[_fzf_job_chooser] )) && bindkey "${FZF_JOB_KEYBIND:-^J}" _fzf_job_chooser
 
-# edit command in $EDITOR — standard vi `v` in normal mode
 autoload -Uz edit-command-line
 zle -N edit-command-line
-# bindkey -M vicmd 'v' edit-command-line
 
 # CTRL-T: use last partial word as fzf initial query, restore buffer on abort
 _fzf_ctrl_t_lastword() {
@@ -80,7 +78,8 @@ compgen() { unfunction complete compgen; bashcompinit; compgen "$@" }
 # Some basic settings
 HISTSIZE=50000
 SAVEHIST=50000
-HISTFILE=$HOME/.zshistory
+HISTFILE=$HOME/.zsh_history
+HISTIGNORE="rm -rf *:sudo *:passwd *:export *SECRET*:kill -9 *"
 REPORTTIME=5
 TIMEFMT='%J  %*E real  %*U user  %*S sys  %P cpu'
 ZLE_RPROMPT_INDENT=0
@@ -118,7 +117,7 @@ setopt monitor               # Support monitor background jobs
 unsetopt print_exit_value    # print return value if non-zero
 unsetopt correct_all	     # do not correct all automatically
 unsetopt beep                # disable audible bell
-unsetopt hist_ignore_space   # ignore space prefixed commands
+# unsetopt hist_ignore_space  # keep space-prefix exclusion for sensitive commands
 unsetopt rm_star_silent      # ask for confirmation for `rm *' or `rm path/*'
 unsetopt hup                 # no hup signal at shell exit
 unsetopt AUTO_NAME_DIRS
@@ -129,7 +128,6 @@ WATCHFMT="%n from %M has %a tty%l at %T %W"
 
 autoload -U run-help
 autoload run-help-git
-# unalias run-help
 alias help=run-help
 
 autoload -Uz zmv
@@ -517,6 +515,8 @@ fi
 # atuin shell history init — cached init after all modules loaded so keybindings stick
 if (( $+commands[atuin] )); then
     eval "$(atuin init zsh --disable-up-arrow)"
+    # On first run, import existing zsh history into atuin's SQLite DB:
+    #   atuin import zsh
 fi
 
 # Source local settings file

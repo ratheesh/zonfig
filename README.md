@@ -40,6 +40,13 @@ make uninstall
 make lint
 ```
 
+## CI
+
+Automated checks run via GitHub Actions on push and PR:
+- `zsh -n` syntax validation for all shell files
+- `shellcheck` on key shell files
+- `stow` dry-run validation of symlink targets
+
 ## LICENSE
 
 MIT

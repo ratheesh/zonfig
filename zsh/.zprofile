@@ -150,6 +150,12 @@ fi
 
 TMPPREFIX="${TMPDIR%/}/zsh"
 
+# Ensure HISTFILE has restrictive permissions to prevent other users from
+# reading command history (which may contain secrets, tokens, passwords).
+if [[ -n "$HISTFILE" && -e "$HISTFILE" ]]; then
+    chmod 600 "$HISTFILE" 2>/dev/null
+fi
+
 # common environment variable exports
 
 # configure bat application
@@ -210,31 +216,38 @@ if [[ -n "$_virtualenvwrapper_script" ]]; then
 fi
 
 # Initialize fzf - https://github.com/junegunn/fzf
+_fzf_default_opts() {
+    local -a opts
+    opts=(
+        '--height 50% --tmux 60%,50%'
+        '--layout=reverse --multi --min-height 20+ --border=rounded'
+        '--header-border horizontal'
+        "--pointer='⮞ ' --marker='•' --prompt='➜  '"
+        '--border-label-pos 1'
+        '--preview-window hidden,right,50% --preview-border line'
+        '--bind f2:toggle-preview'
+        '--info=inline-right --ansi'
+        '--color label:blue'
+        '--color=border:#2B535C'
+        '--color=fg:#c0c0c0'
+        '--color=header:#73918C'
+        '--color=bg+:#000000'
+        '--color=hl+:#cf007c:italic'
+        '--color=hl:#2ac3ce'
+        '--color=info:#545c7e'
+        '--color=marker:#cf007c'
+        '--color=pointer:#029456'
+        '--color=prompt:#D8226C'
+        '--color=query:#c0caf5:regular'
+        '--color=scrollbar:#5f547d'
+        '--color=separator:#715E69'
+        '--color=spinner:#cf007c'
+    )
+    printf '%s ' "${opts[@]}"
+}
+
 if [[ -x "$(command -v fzf)" ]]; then
-    export FZF_DEFAULT_OPTS="--height 50% --tmux 60%,50%              \
-        --layout=reverse --multi --min-height 20+ --border=rounded    \
-        --header-border horizontal                                    \
-        --pointer='⮞ ' --marker='•' --prompt='➜  '                    \
-        --border-label-pos 1                                          \
-        --preview-window 'hidden,right,50%' --preview-border line     \
-        --bind 'f2:toggle-preview'                                    \
-        --info=inline-right --ansi                                    \
-        --color 'label:blue'                                          \
-        --color=border:#2B535C                                        \
-        --color=fg:#c0c0c0                                            \
-        --color=header:#73918C                                        \
-        --color=bg+:#000000                                           \
-        --color=hl+:#cf007c:italic                                    \
-        --color=hl:#2ac3ce                                            \
-        --color=info:#545c7e                                          \
-        --color=marker:#cf007c                                        \
-        --color=pointer:#029456                                       \
-        --color=prompt:#D8226C                                        \
-        --color=query:#c0caf5:regular                                 \
-        --color=scrollbar:#5f547d                                     \
-        --color=separator:#715E69                                     \
-        --color=spinner:#cf007c                                       \
-    "
+    export FZF_DEFAULT_OPTS="$(_fzf_default_opts)"
     export FZF_CTRL_R_OPTS="$FZF_DEFAULT_OPTS +m"
 
     # zsh-cycle-jobs: key that opens the fzf job chooser (must be set before the
@@ -252,14 +265,14 @@ if (( $+commands[fd] ));then
         fd --hidden --follow --color=never --exclude ".git" . "$1"
     }
 
-   # Use fdfind to generate the list for directory completion
-   _fzf_compgen_dir() {
-       fd --type d --hidden --follow --color=never --exclude ".git" . "$1"
-   }
-  elif (( $+commands[rg] )); then
+    # Use fdfind to generate the list for directory completion
+    _fzf_compgen_dir() {
+        fd --type d --hidden --follow --color=never --exclude ".git" . "$1"
+    }
+elif (( $+commands[rg] )); then
     export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git"'
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
- elif (( $+commands[ag] )); then
+elif (( $+commands[ag] )); then
     export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 fi
