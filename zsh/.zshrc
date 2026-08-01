@@ -79,7 +79,7 @@ compgen() { unfunction complete compgen; bashcompinit; compgen "$@" }
 HISTSIZE=50000
 SAVEHIST=50000
 HISTFILE=$HOME/.zsh_history
-HISTIGNORE="rm -rf *:sudo *:passwd *:export *SECRET*:kill -9 *"
+HISTIGNORE="rm -rf *:passwd *:export *SECRET*:kill -9 *"
 REPORTTIME=5
 TIMEFMT='%J  %*E real  %*U user  %*S sys  %P cpu'
 ZLE_RPROMPT_INDENT=0
@@ -90,7 +90,7 @@ setopt nobgnice              # run bg jobs at full speed
 setopt append_history
 setopt extended_history
 setopt hist_ignore_dups      # ignore consecutive duplicates
-# setopt hist_save_no_dups    # no duplicates when writing history file
+setopt hist_save_no_dups    # no duplicates when writing history file
 setopt hist_reduce_blanks    # trim blanks
 setopt hist_verify           # show before executing history commands
 setopt share_history         # share hist between sessions; implies inc_append_history
