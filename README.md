@@ -25,7 +25,7 @@ stow -R -v -t $HOME zsh
 
 - Sets up Zsh with the zimfw plugin manager
 - Lazily loads tools (nvm, cargo, virtualenvwrapper, perl, embedded dev toolchains)
-- Configures fzf, zoxide, atuin, bat, eza, direnv, and more
+- Configures fzf, zoxide, bat, eza, direnv, and more
 - Adapts `ps` flags and Homebrew paths per OS
 
 ## Uninstall

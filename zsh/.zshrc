@@ -89,8 +89,9 @@ setopt multibyte             # Support multibyte support
 setopt nobgnice              # run bg jobs at full speed
 setopt append_history
 setopt extended_history
+setopt histappend            # append to history file, don't overwrite it
 setopt hist_ignore_dups      # ignore consecutive duplicates
-setopt hist_save_no_dups    # no duplicates when writing history file
+setopt hist_save_no_dups      # no duplicates when writing history file
 setopt hist_reduce_blanks    # trim blanks
 setopt hist_verify           # show before executing history commands
 setopt share_history         # share hist between sessions; implies inc_append_history
@@ -510,13 +511,6 @@ if [[ -s "$NVM_DIR/nvm.sh" ]]; then
     node() { _nvm_load; node "$@" }
     npm()  { _nvm_load; npm  "$@" }
     npx()  { _nvm_load; npx  "$@" }
-fi
-
-# atuin shell history init — cached init after all modules loaded so keybindings stick
-if (( $+commands[atuin] )); then
-    eval "$(atuin init zsh --disable-up-arrow)"
-    # On first run, import existing zsh history into atuin's SQLite DB:
-    #   atuin import zsh
 fi
 
 # Source local settings file
