@@ -78,6 +78,7 @@ compgen() { unfunction complete compgen; bashcompinit; compgen "$@" }
 # Some basic settings
 HISTSIZE=50000
 SAVEHIST=50000
+HISTFILESIZE=50000
 HISTFILE=$HOME/.zsh_history
 HISTIGNORE="rm -rf *:passwd *:export *SECRET*:kill -9 *"
 REPORTTIME=5
@@ -87,11 +88,10 @@ ZLE_RPROMPT_INDENT=0
 setopt shwordsplit           # word-split $arm/$xilinx/etc env vars for `$arm make` embedded dev usage
 setopt multibyte             # Support multibyte support
 setopt nobgnice              # run bg jobs at full speed
-setopt append_history
 setopt extended_history
-setopt histappend            # append to history file, don't overwrite it
+setopt append_history        # append to history file, don't overwrite it
 setopt hist_ignore_dups      # ignore consecutive duplicates
-setopt hist_save_no_dups      # no duplicates when writing history file
+# setopt hist_save_no_dups      # no duplicates when writing history file
 setopt hist_reduce_blanks    # trim blanks
 setopt hist_verify           # show before executing history commands
 setopt share_history         # share hist between sessions; implies inc_append_history
@@ -225,7 +225,7 @@ done
 bindkey -M vicmd "j" history-substring-search-down
 bindkey -M vicmd "k" history-substring-search-up
 
-# Advanced History options
+# zsh-history-substring-search options
 HIST_STAMPS="yyyy-mm-dd"
 zstyle ':completion:*' keep-prefix true
 zstyle ':history-append:*' preserve-days true
