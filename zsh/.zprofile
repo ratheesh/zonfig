@@ -219,7 +219,7 @@ fi
 _fzf_default_opts() {
     local -a opts
     opts=(
-        '--height 50% --tmux 60%,50%'
+        '--height 50% --margin 10%,10% --tmux 60%,50%'
         '--layout=reverse --multi --min-height 20+ --border=rounded'
         '--header-border horizontal'
         "--pointer='⮞ ' --marker='•' --prompt='➜  '"
@@ -245,16 +245,6 @@ _fzf_default_opts() {
     )
     printf '%s ' "${opts[@]}"
 }
-
-if [[ -x "$(command -v fzf)" ]]; then
-    export FZF_DEFAULT_OPTS="$(_fzf_default_opts)"
-    export FZF_CTRL_R_OPTS="$FZF_DEFAULT_OPTS +m"
-
-    # zsh-cycle-jobs: key that opens the fzf job chooser (must be set before the
-    # module loads in .zshrc). ^J is the plugin default; rebound in .zshrc after
-    # zimfw init so it survives the vi-mode module's keymap reset.
-    export FZF_JOB_KEYBIND="^J"
-fi
 
 if (( $+commands[fd] ));then
     export FZF_DEFAULT_COMMAND='fd --type file --follow --hidden --strip-cwd-prefix --color=never --exclude .git'
@@ -285,20 +275,28 @@ if (( $+commands[fzf] )) && [[ -o interactive ]]; then
     fi
     source $_fzf_cache
     unset _fzf_cache
-fi
 
-# fzf-git settings
-# Redefine the base function with preview disabled by default
-# Redefine this function to change the options
-if (( $+commands[fzf-tmux] )); then
-  _fzf_git_fzf() {
-    fzf-tmux -p80%,60% -- \
-      --layout=reverse --multi --height=50% --min-height=20 --border \
-      --border-label-pos=2 \
-      --color='header:italic:underline,label:blue' \
-      --preview-window='hidden' \
-      --bind='ctrl-/:change-preview-window(down,50%,border-top|hidden|)' "$@"
-  }
+    export FZF_DEFAULT_OPTS="$(_fzf_default_opts)"
+    export FZF_CTRL_R_OPTS="$FZF_DEFAULT_OPTS +m"
+
+    # zsh-cycle-jobs: key that opens the fzf job chooser (must be set before the
+    # module loads in .zshrc). ^J is the plugin default; rebound in .zshrc after
+    # zimfw init so it survives the vi-mode module's keymap reset.
+    export FZF_JOB_KEYBIND="^J"
+
+    # fzf-git settings
+    # Redefine the base function with preview disabled by default
+    # Redefine this function to change the options
+    if (( $+commands[fzf-tmux] )); then
+      _fzf_git_fzf() {
+        fzf-tmux -p80%,60% -- \
+          --layout=reverse --multi --height=50% --min-height=20 --border \
+          --border-label-pos=2 \
+          --color='header:italic:underline,label:blue' \
+          --preview-window='hidden' \
+          --bind='ctrl-/:change-preview-window(down,50%,border-top|hidden|)' "$@"
+      }
+    fi
 fi
 
 # zoxide init
