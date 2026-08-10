@@ -8,9 +8,9 @@
 # ------------------
 
 #
-if [[ ! -o login ]];then
-    source $HOME/.zprofile
-fi
+# if [[ ! -o login ]];then
+#     source $HOME/.zprofile
+# fi
 
 # Define zim location
 ZIM_HOME=${ZDOTDIR:-${HOME}}/.zim
@@ -34,9 +34,9 @@ source ${ZIM_HOME}/init.zsh
 
 # Re-bind autopair delete widgets — vi-mode module (loaded during init.zsh) resets
 # keymaps and overrides ^w with backward-kill-word, ^h with backward-delete-char, etc.
-bindkey '^w' autopair-delete-word
-bindkey '^h' autopair-delete
-bindkey '^?' autopair-delete
+bindkey -M viins '^w' autopair-delete-word
+bindkey -M viins '^h' autopair-delete
+bindkey -M viins '^?' autopair-delete
 
 # Restore zsh-cycle-jobs binding — vi-mode (loaded after it) resets the viins keymap
 (( $+functions[_fzf_job_chooser] )) && bindkey "${FZF_JOB_KEYBIND:-^J}" _fzf_job_chooser
@@ -85,13 +85,16 @@ REPORTTIME=5
 TIMEFMT='%J  %*E real  %*U user  %*S sys  %P cpu'
 ZLE_RPROMPT_INDENT=0
 
-setopt shwordsplit           # word-split $arm/$xilinx/etc env vars for `$arm make` embedded dev usage
+# setopt shwordsplit           # word-split $arm/$xilinx/etc env vars for `$arm make` embedded dev usage
+# DANGEROUS: breaks arrays with spaces. Use locally: `setopt localoptions shwordsplit` in functions
 setopt multibyte             # Support multibyte support
 setopt nobgnice              # run bg jobs at full speed
 setopt extended_history
 setopt append_history        # append to history file, don't overwrite it
 setopt hist_ignore_dups      # ignore consecutive duplicates
 setopt hist_save_no_dups     # no duplicates when writing history file
+setopt hist_expire_dups_first # expire duplicates first when trimming history
+setopt hist_find_no_dups     # don't show duplicates in history search
 setopt hist_reduce_blanks    # trim blanks
 setopt hist_verify           # show before executing history commands
 setopt share_history         # share hist between sessions; implies inc_append_history
@@ -146,8 +149,9 @@ ttyctl -f
 _comp_options+=(globdots)
 
 # Adjust key timeout (useful for Vi mode on Zsh)
-export KEYMAPTIMEOUT=1
-export KEYTIMEOUT=1
+# KEYTIMEOUT in centiseconds (1/100s), KEYMAPTIMEOUT in milliseconds
+export KEYMAPTIMEOUT=20
+export KEYTIMEOUT=20
 
 # turn off ZLE bracketed paste in dumb term
 # otherwise turn on ZLE bracketed-paste-magic
@@ -159,7 +163,8 @@ else
 fi
 
 # If this is removed, cursor after prompt behave weirdly
-[[ $TMUX == "" ]] && (( ${+terminfo[wezterm]} )) && export TERM="wezterm"
+# Use TERM_PROGRAM for reliable wezterm detection (works inside tmux too)
+[[ $TMUX == "" && $TERM_PROGRAM == wezterm ]] && export TERM="wezterm"
 
 
 #
@@ -295,11 +300,33 @@ bindkey -M menuselect '^[[Z' reverse-menu-complete
 # Meta-u to chdir to the parent directory
 bindkey -s '\eu' '^Ucd ..; ls^M'
 
-# Unbind Ctrl-g for fzf-git to get working
-bindkey -r "^g"
+# fzf-git keybindings (loaded via zimfw junegunn/fzf-git.sh)
+# Explicitly bind instead of unbinding ^g/^o globally
+if (( $+functions[fzf-git-files] )); then
+    for keymap in 'emacs' 'viins' 'vicmd'; do
+        bindkey -M ${keymap} '^g' fzf-git-files
+        bindkey -M ${keymap} '^g^f' fzf-git-files
+        bindkey -M ${keymap} '^g^b' fzf-git-branches
+        bindkey -M ${keymap} '^g^t' fzf-git-tags
+        bindkey -M ${keymap} '^g^r' fzf-git-remotes
+        bindkey -M ${keymap} '^g^h' fzf-git-hashes
+        bindkey -M ${keymap} '^g^s' fzf-git-stashes
+        bindkey -M ${keymap} '^g^l' fzf-git-reflogs
+        bindkey -M ${keymap} '^g^w' fzf-git-worktrees
+        bindkey -M ${keymap} '^g^e' fzf-git-recent-files
+    done
+fi
 
-# Unbind Ctrl-o for fzf-docker to get working
-# bindkey -r "^o"
+# fzf-docker keybindings (commented out - uncomment if using ethanrutt/fzf-docker.sh)
+# if (( $+functions[fzf-docker-containers] )); then
+#     for keymap in 'emacs' 'viins' 'vicmd'; do
+#         bindkey -M ${keymap} '^o' fzf-docker-containers
+#         bindkey -M ${keymap} '^o^c' fzf-docker-containers
+#         bindkey -M ${keymap} '^o^i' fzf-docker-images
+#         bindkey -M ${keymap} '^o^v' fzf-docker-volumes
+#         bindkey -M ${keymap} '^o^n' fzf-docker-networks
+#     done
+# fi
 
 bindkey '^o' forward-word
 
@@ -342,7 +369,7 @@ cgdb_logicpd() { _embedded_dev_load; cgdb_logicpd "$@" }
 cgdb_stm() { _embedded_dev_load; cgdb_stm "$@" }
 goarm() { _embedded_dev_load; goarm "$@" }
 
-alias vi=vim
+alias vi=nvim
 alias vim=nvim
 if (( $+commands[nvr] && $+commands[nvim] ));then
     alias nvr='nvr -s --remote'
@@ -511,6 +538,15 @@ if [[ -s "$NVM_DIR/nvm.sh" ]]; then
     node() { _nvm_load; node "$@" }
     npm()  { _nvm_load; npm  "$@" }
     npx()  { _nvm_load; npx  "$@" }
+
+    # Auto-use nvm version from .nvmrc/.node-version on chpwd
+    _nvm_auto_use() {
+        [[ -f .nvmrc || -f .node-version ]] && nvm use >/dev/null 2>&1
+    }
+    autoload -U add-zsh-hook
+    add-zsh-hook chpwd _nvm_auto_use
+    # Run once on shell startup
+    _nvm_auto_use
 fi
 
 # atuin shell history init — cached init after all modules loaded so keybindings stick
