@@ -21,9 +21,10 @@ case "$OSTYPE" in
     *)        export ZONFIG_OS="other"  ;;
 esac
 
-# Ensure that a non-login, non-interactive shell has a defined environment.
-if [[ "$SHLVL" -eq 1 && ! -o LOGIN && ! -o INTERACTIVE && -s "${ZDOTDIR:-$HOME}/.zprofile" ]]; then
-    # echo "🙤 non-login shell🙦"
+# Ensure that a non-login, interactive shell has a defined environment.
+if [[ "$SHLVL" -le 2 && ! -o LOGIN && -o INTERACTIVE && -s "${ZDOTDIR:-$HOME}/.zprofile" && -z "$__ZPROFILE_SOURCED" ]]; then
+    echo "🙤 non-login shell🙦"
+    export __ZPROFILE_SOURCED=1
     source "${ZDOTDIR:-$HOME}/.zprofile"
 fi
 
