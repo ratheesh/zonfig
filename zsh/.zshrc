@@ -551,7 +551,18 @@ fi
 
 # atuin shell history init — cached init after all modules loaded so keybindings stick
 if (( $+commands[atuin] )); then
-    eval "$(atuin init zsh --disable-up-arrow)"
+    # ATUIN_NOBIND stops atuin's init from hijacking ^R, up-arrow, vi '/' and
+    # the AI '?' binding. zsh still records history natively; atuin only mirrors
+    # it via its preexec/precmd/zshaddhistory hooks.
+    export ATUIN_NOBIND=1
+    eval "$(atuin init zsh)"
+    unset ATUIN_NOBIND
+
+    # atuin search on Alt-r in every keymap; native ^R and vi '/' stay intact
+    bindkey -M emacs '\er' atuin-search
+    bindkey -M viins '\er' atuin-search-viins
+    bindkey -M vicmd '\er' atuin-search-vicmd
+
     # On first run, import existing zsh history into atuin's SQLite DB:
     #   atuin import zsh
 fi
