@@ -192,19 +192,6 @@ WORDCHARS=${WORDCHARS//[\/_-]}
 # input
 #
 
-# SSH agent — fully async to avoid blocking prompt (esp. on macOS where ssh-add
-# hits the Keychain, adding 50-200ms per call).
-_ssh_setup() {
-    local ssh_env="$HOME/.ssh-agent"
-    ssh-add -l &>/dev/null && return
-    [[ -r "$ssh_env" ]] && source "$ssh_env" >/dev/null
-    ssh-add -l &>/dev/null && return
-    (umask 066; ssh-agent >! "$ssh_env") && source "$ssh_env" >/dev/null
-    typeset -a _keys=($HOME/.ssh/id_rsa*(N) $HOME/.ssh/id_ed25519*(N))
-    (( ${#_keys} )) && ssh-add "${_keys[@]}" 2>/dev/null
-}
-_ssh_setup &!
-
 #
 # termtitle
 #

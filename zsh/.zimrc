@@ -20,6 +20,7 @@ zmodule environment
 zmodule git
 
 # SSH agent handled by custom lazy code in .zshrc (avoids zim module's eager init)
+zmodule ssh
 
 # Sets a custom terminal title.
 # zmodule termtitle
