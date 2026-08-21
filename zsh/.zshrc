@@ -82,6 +82,7 @@ HISTFILESIZE=50000
 HISTFILE=$HOME/.zsh_history
 HISTIGNORE="rm -rf *:passwd *:export *SECRET*:kill -9 *"
 REPORTTIME=5
+HISTDUP=erase
 TIMEFMT='%J  %*E real  %*U user  %*S sys  %P cpu'
 ZLE_RPROMPT_INDENT=0
 
@@ -267,7 +268,7 @@ ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(history-substring-search-up history-substring-se
 # ^o accepts one word (vi-forward-word is a default partial-accept widget).
 for keymap in 'emacs' 'viins' 'vicmd'; do
     bindkey -M ${keymap} '^ '  autosuggest-accept
-    bindkey -M ${keymap} '^\n' autosuggest-execute
+    bindkey -M ${keymap} '^J' autosuggest-execute
     bindkey -M ${keymap} '^o'  forward-word
 done
 
