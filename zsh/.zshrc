@@ -281,7 +281,7 @@ ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(history-substring-search-up history-substring-se
 for keymap in 'emacs' 'viins' 'vicmd'; do
     bindkey -M ${keymap} '^ '  autosuggest-accept
     bindkey -M ${keymap} '^\n' autosuggest-execute
-    bindkey -M ${keymap} '^o'  vi-forward-word
+    bindkey -M ${keymap} '^o'  forward-word
 done
 
 # Enable multiselection of items
@@ -327,8 +327,6 @@ fi
 #         bindkey -M ${keymap} '^o^n' fzf-docker-networks
 #     done
 # fi
-
-bindkey '^o' forward-word
 
 # disable highlighting on paste
 zle_highlight+=(paste:none)
