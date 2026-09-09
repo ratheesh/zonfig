@@ -151,8 +151,8 @@ _comp_options+=(globdots)
 
 # Adjust key timeout (useful for Vi mode on Zsh)
 # KEYTIMEOUT in centiseconds (1/100s), KEYMAPTIMEOUT in milliseconds
-export KEYMAPTIMEOUT=20
-export KEYTIMEOUT=20
+# export KEYMAPTIMEOUT=30
+# export KEYTIMEOUT=30
 
 # turn off ZLE bracketed paste in dumb term
 # otherwise turn on ZLE bracketed-paste-magic
@@ -250,7 +250,7 @@ ZSH_HIGHLIGHT_STYLES[comment]='fg=242'
 # module is loaded by init.zsh before the first precmd wraps widgets.
 ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 # Fetch suggestions asynchronously so a slow `completion` lookup never blocks typing.
-ZSH_AUTOSUGGEST_USE_ASYNC=true
+ZSH_AUTOSUGGEST_USE_ASYNC=false
 # Suggestion sources, tried in order. match_prev_cmd is intentionally omitted: it
 # needs ordered, un-deduped history and is broken by `setopt hist_ignore_all_dups`.
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
@@ -263,6 +263,7 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#606060,italic"
 # Clear the suggestion on history-substring-search so no stale hint lingers.
 ZSH_AUTOSUGGEST_CLEAR_WIDGETS=("${(@)ZSH_AUTOSUGGEST_CLEAR_WIDGETS:#(up|down)-line-or-history}")
 ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(history-substring-search-up history-substring-search-down)
+ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(bracketed-paste bracketed-paste-magic)
 
 # Keybindings: ^Space accepts the suggestion, ^Enter accepts and runs it,
 # ^o accepts one word (vi-forward-word is a default partial-accept widget).
