@@ -80,8 +80,8 @@ zmodule zsh-users/zsh-autosuggestions
 
 # syntax-highlighting must be sourced after completion
 # zmodule zsh-users/zsh-syntax-highlighting
-zmodule z-shell/F-Sy-H
-# zmodule zdharma-continuum/fast-syntax-highlighting
+# zmodule z-shell/F-Sy-H
+zmodule zdharma-continuum/fast-syntax-highlighting
 
 zmodule ratheesh/vi-mode
 zmodule b4b4r07/zsh-vimode-visual
