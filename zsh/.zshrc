@@ -151,8 +151,11 @@ _comp_options+=(globdots)
 
 # Adjust key timeout (useful for Vi mode on Zsh)
 # KEYTIMEOUT in centiseconds (1/100s), KEYMAPTIMEOUT in milliseconds
-# export KEYMAPTIMEOUT=30
-# export KEYTIMEOUT=30
+export KEYMAPTIMEOUT=30
+export KEYTIMEOUT=1
+
+# Add space after completion for certain characters (e.g., &, |, ;)
+ZLE_SPACE_SUFFIX_CHARS='&|;'
 
 # turn off ZLE bracketed paste in dumb term
 # otherwise turn on ZLE bracketed-paste-magic
@@ -176,7 +179,7 @@ fi
 SPROMPT='zsh: correct %F{red}%R%f to %F{green}%r%f [nyae]? '
 
 # Remove path separator from WORDCHARS.
-WORDCHARS=${WORDCHARS//[\/_-]}
+WORDCHARS=${WORDCHARS//[\/]}
 
 # --------------------
 # Module configuration
@@ -268,7 +271,7 @@ ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(bracketed-paste bracketed-paste-magic)
 # Keybindings: ^Space accepts the suggestion, ^Enter accepts and runs it,
 # ^o accepts one word (vi-forward-word is a default partial-accept widget).
 for keymap in 'emacs' 'viins' 'vicmd'; do
-    bindkey -M ${keymap} '^ '  autosuggest-accept
+    bindkey -M ${keymap} '^@' autosuggest-accept
     bindkey -M ${keymap} '^J' autosuggest-execute
     bindkey -M ${keymap} '^o'  forward-word
 done
