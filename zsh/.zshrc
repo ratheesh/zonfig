@@ -270,9 +270,17 @@ ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(bracketed-paste bracketed-paste-magic)
 
 # Keybindings: ^Space accepts the suggestion, ^Enter accepts and runs it,
 # ^o accepts one word (vi-forward-word is a default partial-accept widget).
+
+_my_autosuggest_execute() {
+    zle autosuggest-accept
+    zle accept-line
+}
+zle -N _autosuggest-execute _my_autosuggest_execute
+
 for keymap in 'emacs' 'viins' 'vicmd'; do
     bindkey -M ${keymap} '^@' autosuggest-accept
     bindkey -M ${keymap} '^J' autosuggest-execute
+    bindkey -M ${keymap} '^[[13;5u' _autosuggest-execute
     bindkey -M ${keymap} '^o'  forward-word
 done
 
