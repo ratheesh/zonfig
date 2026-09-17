@@ -39,7 +39,7 @@ bindkey -M viins '^h' autopair-delete
 bindkey -M viins '^?' autopair-delete
 
 # Restore zsh-cycle-jobs binding — vi-mode (loaded after it) resets the viins keymap
-(( $+functions[_fzf_job_chooser] )) && bindkey "${FZF_JOB_KEYBIND:-^J}" _fzf_job_chooser
+(( $+functions[_fzf_job_chooser] )) && bindkey "${FZF_JOB_KEYBIND:-\eq}" _fzf_job_chooser
 
 autoload -Uz edit-command-line
 zle -N edit-command-line

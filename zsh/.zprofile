@@ -280,9 +280,8 @@ if (( $+commands[fzf] )) && [[ -o interactive ]]; then
     export FZF_CTRL_R_OPTS="$FZF_DEFAULT_OPTS +m"
 
     # zsh-cycle-jobs: key that opens the fzf job chooser (must be set before the
-    # module loads in .zshrc). ^J is the plugin default; rebound in .zshrc after
-    # zimfw init so it survives the vi-mode module's keymap reset.
-    export FZF_JOB_KEYBIND="^J"
+    # module loads in .zshrc).
+    export FZF_JOB_KEYBIND="\eq"
 
     # fzf-git settings
     # Redefine the base function with preview disabled by default
