@@ -90,15 +90,19 @@ ZLE_RPROMPT_INDENT=0
 # DANGEROUS: breaks arrays with spaces. Use locally: `setopt localoptions shwordsplit` in functions
 setopt multibyte             # Support multibyte support
 setopt nobgnice              # run bg jobs at full speed
+
+# History related
 setopt extended_history
-setopt append_history        # append to history file, don't overwrite it
-setopt hist_ignore_dups      # ignore consecutive duplicates
-setopt hist_save_no_dups     # no duplicates when writing history file
+setopt append_history         # append to history file, don't overwrite it
+setopt hist_ignore_dups       # ignore consecutive duplicates
+setopt hist_save_no_dups      # no duplicates when writing history file
 setopt hist_expire_dups_first # expire duplicates first when trimming history
-setopt hist_find_no_dups     # don't show duplicates in history search
-setopt hist_reduce_blanks    # trim blanks
-setopt hist_verify           # show before executing history commands
-setopt share_history         # share hist between sessions; implies inc_append_history
+setopt hist_find_no_dups      # don't show duplicates in history search
+setopt hist_reduce_blanks     # trim blanks
+setopt hist_verify            # show before executing history commands
+setopt share_history          # share hist between sessions; implies inc_append_history
+setopt hist_no_store          # Don't store history commands
+
 setopt bang_hist             # !keyword
 setopt MULTIOS               # write to multiple files
 setopt auto_remove_slash     # self explicit
