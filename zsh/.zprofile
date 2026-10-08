@@ -337,19 +337,19 @@ if (( $+commands[rgrc] )); then
     eval "$(rgrc --all-aliases)"
 # Generic Colouriser (grc) — fallback if rgrc not available
 elif (( $+commands[grc] )); then
-    alias ping='/usr/bin/grc -s --colour=auto ping'
-    alias df='/usr/bin/grc -s --colour=auto df -kh'
-    alias ifconfig='/usr/bin/grc -s --colour=auto ifconfig'
-    alias route='/usr/bin/grc -s --colour=auto route'
-    alias irclog='/usr/bin/grc -s --colour=auto irclog'
-    # alias ls='/usr/bin/grc -s --colour=auto ls'
-    alias mount='/usr/bin/grc -s --colour=auto mount'
-    alias gcc='/usr/bin/grc -s --colour=auto gcc'
-    alias make='/usr/bin/grc -s --colour=auto make'
-    alias cmake='/usr/bin/grc -s --colour=auto cmake'
-    alias ninja='/usr/bin/grc -s --colour=auto ninja'
-    alias cal='/usr/bin/grc -s --colour=auto cal'
-    alias ncal='/usr/bin/grc -s --colour=auto ncal -w'
+    alias ping='grc -s --colour=auto ping'
+    alias df='grc -s --colour=auto df -kh'
+    alias ifconfig='grc -s --colour=auto ifconfig'
+    alias route='grc -s --colour=auto route'
+    alias irclog='grc -s --colour=auto irclog'
+    # alias ls='grc -s --colour=auto ls'
+    alias mount='grc -s --colour=auto mount'
+    alias gcc='grc -s --colour=auto gcc'
+    alias make='grc -s --colour=auto make'
+    alias cmake='grc -s --colour=auto cmake'
+    alias ninja='grc -s --colour=auto ninja'
+    alias cal='grc --pty -s --colour=auto cal'
+    alias ncal='grc --pty -s --colour=auto ncal -w'
 fi
 
 # vim: set ft=zsh ff=unix ts=4 sw=4 tw=0 expandtab:
