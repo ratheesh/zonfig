@@ -485,6 +485,13 @@ done
 zstyle ':completion:*' list-colors $list_colors
 zstyle ':completion:*:directories' list-colors $list_colors
 
+# Grep colors
+export GREP_COLORS='mt=03;38;5;10;48;5;235:sl=49;39:cx=49;39:fn=49;38;5;68:ln=49:38;5;180:bn=49;38;5;116:se=49;38;5;80'
+# ms -> selected match, 38;5;10 -> foreground color(green), 48;5;235 -> background color(dark gray)
+# ln -> matching line, 38;5;11 -> foreground color(yellow), 48;5;235 -> background color(dark gray)
+# 0 -> reset, 1 -> bold, 3 -> italic, 4 -> underline, 5 -> blink, 7 -> reverse, 8 -> conceal, 9 -> strikethrough
+# 38;5;<n> -> 256 color foreground, 48;5;<n> -> 256 color background
+
 bindkey -M menuselect "^[m" accept-and-hold
 bindkey -M menuselect "$terminfo[kcbt]" reverse-menu-complete
 
