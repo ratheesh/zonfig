@@ -298,18 +298,12 @@ if (( $+commands[fzf] )) && [[ -o interactive ]]; then
     fi
 fi
 
-# zoxide init
 # Configure zoxide to replace cd command
-export _ZO_ECHO='1'
-export _ZO_FZF_OPTS="$FZF_DEFAULT_OPTS +m"
 if (( $+commands[zoxide] )) && [[ -o interactive ]]; then
-    _zoxide_cache="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zoxide-init.zsh"
-    if [[ ! -f $_zoxide_cache || $commands[zoxide] -nt $_zoxide_cache ]]; then
-        mkdir -p "${_zoxide_cache:h}"
-        zoxide init zsh --cmd j >| $_zoxide_cache
-    fi
-    source $_zoxide_cache
-    unset _zoxide_cache
+    export _ZO_ECHO='1'
+    export _ZO_FZF_OPTS="$FZF_DEFAULT_OPTS +m"
+    eval "$(zoxide init zsh --cmd j)"
+    eval "$(zoxide init zsh --cmd cd)"
 fi
 
 # Lazy-load cargo env on first use
