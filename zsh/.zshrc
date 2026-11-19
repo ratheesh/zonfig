@@ -24,19 +24,14 @@ if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
         https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
   fi
 fi
+
 # Install missing modules, and update ${ZIM_HOME}/init.zsh if missing or outdated.
 if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZDOTDIR:-${HOME}}/.zimrc ]]; then
   source ${ZIM_HOME}/zimfw.zsh init -q
 fi
+
 # Initialize modules.
 source ${ZIM_HOME}/init.zsh
-(( $+functions[autopair-init] )) && autopair-init
-
-# Re-bind autopair delete widgets — vi-mode module (loaded during init.zsh) resets
-# keymaps and overrides ^w with backward-kill-word, ^h with backward-delete-char, etc.
-bindkey -M viins '^w' autopair-delete-word
-bindkey -M viins '^h' autopair-delete
-bindkey -M viins '^?' autopair-delete
 
 # Restore zsh-cycle-jobs binding — vi-mode (loaded after it) resets the viins keymap
 (( $+functions[_fzf_job_chooser] )) && bindkey "${FZF_JOB_KEYBIND:-\eq}" _fzf_job_chooser
