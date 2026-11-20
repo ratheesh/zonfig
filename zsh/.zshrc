@@ -281,6 +281,7 @@ for keymap in 'emacs' 'viins' 'vicmd'; do
     bindkey -M ${keymap} '^J' autosuggest-execute
     bindkey -M ${keymap} '^[[13;5u' _autosuggest-execute
     bindkey -M ${keymap} '^o'  forward-word
+    bindkey -M ${keymap} '^w'  backward-kill-word
 done
 
 # Enable multiselection of items
