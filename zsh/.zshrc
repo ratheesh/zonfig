@@ -302,18 +302,19 @@ bindkey -s '\eu' '^Ucd ..; ls^M'
 
 # fzf-git keybindings (loaded via zimfw junegunn/fzf-git.sh)
 # Explicitly bind instead of unbinding ^g/^o globally
-if (( $+functions[fzf-git-files] )); then
+if (( $+functions[fzf-git-files-widget] )); then
+    bindkey -r '^g' # remove default ^g binding
     for keymap in 'emacs' 'viins' 'vicmd'; do
-        bindkey -M ${keymap} '^g' fzf-git-files
-        bindkey -M ${keymap} '^g^f' fzf-git-files
-        bindkey -M ${keymap} '^g^b' fzf-git-branches
-        bindkey -M ${keymap} '^g^t' fzf-git-tags
-        bindkey -M ${keymap} '^g^r' fzf-git-remotes
-        bindkey -M ${keymap} '^g^h' fzf-git-hashes
-        bindkey -M ${keymap} '^g^s' fzf-git-stashes
-        bindkey -M ${keymap} '^g^l' fzf-git-reflogs
-        bindkey -M ${keymap} '^g^w' fzf-git-worktrees
-        bindkey -M ${keymap} '^g^e' fzf-git-recent-files
+        # bindkey -M ${keymap} '^g' fzf-git-files-widget
+        bindkey -M ${keymap} '^g^f' fzf-git-files-widget
+        bindkey -M ${keymap} '^g^b' fzf-git-branches-widget
+        bindkey -M ${keymap} '^g^t' fzf-git-tags-widget
+        bindkey -M ${keymap} '^g^r' fzf-git-remotes-widget
+        bindkey -M ${keymap} '^g^h' fzf-git-hashes-widget
+        bindkey -M ${keymap} '^g^s' fzf-git-stashes-widget
+        bindkey -M ${keymap} '^g^l' fzf-git-reflogs-widget
+        bindkey -M ${keymap} '^g^w' fzf-git-worktrees-widget
+        bindkey -M ${keymap} '^g^e' fzf-git-recent-files-widget
     done
 fi
 
